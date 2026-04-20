@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "version": "1.0.0",
+  "name": "Supabase — Deep Dark",
+  "description": "Near-black Studio chrome with a whisper of Supabase green. Dotted grid frame, brand-green accents.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "theme": {
+    "images": {
+      "theme_frame": "images/theme_frame.png",
+      "theme_toolbar": "images/theme_toolbar.png",
+      "theme_ntp_background": "images/theme_ntp_background.png"
+    },
+    "colors": {
+      "frame":                       [18, 18, 18],
+      "frame_inactive":              [15, 15, 15],
+      "frame_incognito":             [10, 10, 10],
+      "frame_incognito_inactive":    [8, 8, 8],
+      "toolbar":                     [31, 31, 31],
+      "tab_text":                    [250, 250, 250],
+      "tab_background_text":         [137, 137, 137],
+      "tab_background_text_inactive":[100, 100, 100],
+      "bookmark_text":               [180, 180, 180],
+      "ntp_background":              [18, 18, 18],
+      "ntp_text":                    [250, 250, 250],
+      "ntp_link":                    [62, 207, 142],
+      "button_background":           [31, 31, 31],
+      "omnibox_background":          [23, 23, 23],
+      "omnibox_text":                [250, 250, 250]
+    },
+    "tints": {
+      "buttons":           [-1, -1, 0.85],
+      "frame":             [-1, -1, -1],
+      "background_tab":    [-1, -1, -1]
+    },
+    "properties": {
+      "ntp_background_alignment": "bottom"
+    }
+  }
+}

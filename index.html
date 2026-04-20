@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Supabase Desktop Kits</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 109 113'><path d='M63.71 110.28c-2.86 3.6-8.66 1.63-8.73-2.97L53.97 40.06h45.22c8.19 0 12.76 9.46 7.67 15.88z' fill='%233ECF8E'/><path d='M45.32 2.07c2.86-3.6 8.66-1.63 8.73 2.97l.44 67.25H9.83c-8.19 0-12.76-9.46-7.67-15.88z' fill='%233ECF8E'/></svg>" />
+<link rel="stylesheet" href="chrome-theme/shared/colors_and_type.css">
+<link rel="stylesheet" href="kits-nav.css?v=4">
+<script defer src="kits-nav.js?v=4" data-active="hub" data-root="" data-tagline="built in admiration of the supabase design system."></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg-alt);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 10px 10px, hsl(var(--brand-default) / 0.06) 0.6px, transparent 1.1px),
+      radial-gradient(circle at 10px 10px, rgba(255,255,255,0.035) 0.6px, transparent 1.1px);
+    background-size: 40px 40px, 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: linear-gradient(180deg, #000 0, #000 65%, transparent 100%);
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    top: -30%; left: 10%;
+    width: 80%; height: 90%;
+    background: radial-gradient(ellipse 55% 50% at 50% 50%, hsl(var(--brand-default) / 0.14), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  main { position: relative; z-index: 1; }
+
+  /* ── Hero ──────────────────────────────────────────────────────────── */
+  .hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 88px 28px 48px;
+    text-align: center;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: hsl(var(--brand-default) / 0.08);
+    border: 1px solid hsl(var(--brand-default) / 0.25);
+    color: #3ECF8E;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .eyebrow .pulse {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brand); box-shadow: 0 0 8px var(--brand);
+  }
+  .hero h1 {
+    font-size: clamp(38px, 6vw, 68px);
+    line-height: 1.04;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin: 0 auto 18px;
+    max-width: 860px;
+  }
+  .hero h1 .accent {
+    color: var(--brand);
+  }
+  .hero p {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--fg-light);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* ── Kits grid ─────────────────────────────────────────────────────── */
+  .kits {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 28px 96px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 860px) { .kits { grid-template-columns: 1fr; } }
+
+  .kit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .18s ease, border-color .18s ease, background .18s ease;
+  }
+  .kit.is-live:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--brand-default) / 0.35);
+    background: rgba(255,255,255,0.035);
+  }
+  .kit.is-soon { opacity: 0.78; cursor: not-allowed; }
+
+  .kit-preview {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-alt);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .kit-preview::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(10,10,10,0.55) 100%);
+    pointer-events: none;
+  }
+  .kit-body {
+    padding: 22px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .kit-heading {
+    display: flex; align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .kit-title {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .kit-status {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--fg-lighter);
+  }
+  .kit-status.live {
+    color: var(--brand);
+    border-color: hsl(var(--brand-default) / 0.3);
+    background: hsl(var(--brand-default) / 0.07);
+  }
+  .kit-status.live::before {
+    content: '';
+    display: inline-block;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 6px var(--brand);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .kit-desc {
+    margin: 0;
+    color: var(--fg-light);
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  .kit-desc code {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    background: rgba(255,255,255,0.05);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .kit-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--fg-lighter);
+    padding-top: 12px;
+    border-top: 1px dashed rgba(255,255,255,0.08);
+  }
+  .kit-meta .m-k { color: var(--fg-light); margin-right: 5px; }
+  .kit-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    color: var(--brand);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding-top: 2px;
+  }
+  .kit.is-soon .kit-cta { color: var(--fg-lighter); }
+
+  /* ── Preview art ──────────────────────────────────────────────────── */
+
+  /* Wallpapers */
+  .prev-wp {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 110%, hsl(var(--brand-default) / 0.35), transparent 70%),
+      radial-gradient(circle at 10px 10px, hsl(var(--brand-default) / 0.12) 0.8px, transparent 1.4px),
+      radial-gradient(circle at 10px 10px, rgba(255,255,255,0.05) 0.8px, transparent 1.4px),
+      var(--bg-alt);
+    background-size: auto, 40px 40px, 20px 20px, auto;
+    mask-image: linear-gradient(180deg, transparent 0, #000 30%, #000 100%);
+  }
+  .prev-wp .mark {
+    position: absolute;
+    left: 50%; bottom: 14%;
+    transform: translate(-50%, 0);
+    width: 62px; height: 64px;
+    filter: drop-shadow(0 0 24px hsl(var(--brand-default) / 0.5));
+  }
+
+  /* Chrome */
+  .prev-cr {
+    position: absolute; inset: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 100% 60% at 50% -20%, hsl(var(--brand-default) / 0.22), transparent 65%),
+      radial-gradient(circle at 10px 10px, hsl(var(--brand-default) / 0.08) 0.6px, transparent 1.1px),
+      radial-gradient(circle at 10px 10px, rgba(255,255,255,0.05) 0.6px, transparent 1.1px);
+    background-size: auto, 40px 40px, 20px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .prev-cr-tabs {
+    padding: 11px 12px 0 60px;
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 40px;
+    position: relative;
+  }
+  .prev-cr-tabs::before {
+    content: '';
+    position: absolute;
+    top: 14px; left: 14px;
+    width: 38px; height: 8px;
+    background:
+      radial-gradient(circle at 4px 4px, #ff5f57 3px, transparent 3.2px) 0 0/14px 14px no-repeat,
+      radial-gradient(circle at 4px 4px, #febc2e 3px, transparent 3.2px) 14px 0/14px 14px no-repeat,
+      radial-gradient(circle at 4px 4px, #28c840 3px, transparent 3.2px) 28px 0/14px 14px no-repeat;
+  }
+  .prev-cr-tab {
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 7px 7px 0 0;
+    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--fg-lighter);
+    flex-shrink: 0;
+  }
+  .prev-cr-tab.act {
+    background: var(--bg-surface-100);
+    color: var(--fg);
+    position: relative;
+  }
+  .prev-cr-tab.act::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--brand);
+    box-shadow: 0 0 8px hsl(var(--brand-default) / 0.5);
+    border-radius: 2px 2px 0 0;
+  }
+  .prev-cr-tab .fav {
+    width: 9px; height: 9px; border-radius: 2px;
+    background: linear-gradient(135deg, var(--brand), hsl(var(--brand-600)));
+  }
+  .prev-cr-tb {
+    height: 22px;
+    background: var(--bg-surface-100);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 6px;
+  }
+  .prev-cr-omni {
+    flex: 1;
+    height: 14px;
+    border-radius: 7px;
+    background: var(--bg-200);
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: rgba(255,255,255,0.45);
+    gap: 4px;
+  }
+  .prev-cr-omni::before {
+    content: '';
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--brand);
+  }
+  .prev-cr-body {
+    flex: 1;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .prev-cr-body .mark {
+    width: 44px; height: 46px;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 16px hsl(var(--brand-default) / 0.4));
+  }
+
+  /* VS Code */
+  .prev-vs {
+    position: absolute; inset: 0;
+    background: #0f1115;
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    grid-template-rows: 20px 1fr;
+  }
+  .prev-vs-tabs {
+    grid-column: 2;
+    background: #0c0e12;
+    display: flex;
+    padding-top: 5px;
+    padding-left: 6px;
+    gap: 2px;
+  }
+  .prev-vs-tab {
+    height: 15px;
+    padding: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--fg-lighter);
+    border-top: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+  }
+  .prev-vs-tab.act {
+    background: #171a20;
+    color: var(--fg);
+    border-top-color: var(--brand);
+  }
+  .prev-vs-side {
+    grid-row: 1 / 3;
+    background: #0c0e12;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px;
+  }
+  .prev-vs-side span {
+    width: 14px; height: 14px; border-radius: 3px;
+    background: rgba(255,255,255,0.08);
+  }
+  .prev-vs-side span:first-child { background: var(--brand); }
+  .prev-vs-code {
+    grid-column: 2;
+    background: #171a20;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    line-height: 1.4;
+  }
+  .prev-vs-code .ln { display: flex; gap: 10px; }
+  .prev-vs-code .num { color: rgba(255,255,255,0.25); width: 16px; text-align: right; flex-shrink: 0; }
+  .prev-vs-code .kw { color: hsl(var(--code-block-4)); }
+  .prev-vs-code .fn { color: hsl(var(--brand-default)); }
+  .prev-vs-code .st { color: hsl(var(--code-block-2)); }
+  .prev-vs-code .id { color: hsl(var(--code-block-1)); }
+  .prev-vs-code .cm { color: var(--fg-muted); }
+  .prev-vs-code .pn { color: hsl(var(--code-block-3)); }
+
+  /* Raycast */
+  .prev-rc {
+    position: absolute; inset: 0;
+    background: #111111;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 50% -10%, hsl(var(--brand-default) / 0.18), transparent 65%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 16px;
+  }
+  .prev-rc-win {
+    width: 74%;
+    background: #1c1c1c;
+    border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .prev-rc-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+  .prev-rc-search .ic {
+    width: 14px; height: 14px; border-radius: 3px;
+    background: linear-gradient(135deg, var(--brand), hsl(var(--brand-600)));
+  }
+  .prev-rc-search .q { color: var(--fg); flex: 1; }
+  .prev-rc-search .q::after { content: '▎'; color: var(--brand); margin-left: 1px; }
+  .prev-rc-search .kbd {
+    font-size: 8px;
+    color: var(--fg-lighter);
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.05);
+  }
+  .prev-rc-sec {
+    padding: 6px 12px 3px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-lighter);
+  }
+  .prev-rc-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    font-size: 10px;
+    color: var(--fg-light);
+  }
+  .prev-rc-row.sel {
+    background: hsl(var(--brand-default) / 0.16);
+    color: var(--fg);
+  }
+  .prev-rc-row .dot {
+    width: 12px; height: 12px; border-radius: 3px;
+    background: rgba(255,255,255,0.12);
+    flex-shrink: 0;
+  }
+  .prev-rc-row.sel .dot { background: var(--brand); }
+
+  /* iTerm */
+  .prev-it {
+    position: absolute; inset: 0;
+    background: #0a1512;
+    padding: 20px 22px 0;
+    display: flex;
+    flex-direction: column;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 50% -10%, hsl(var(--brand-default) / 0.2), transparent 65%);
+  }
+  .prev-it-bar {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .prev-it-bar span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .prev-it-bar span:nth-child(1) { background: #ff5f57; }
+  .prev-it-bar span:nth-child(2) { background: #febc2e; }
+  .prev-it-bar span:nth-child(3) { background: #28c840; }
+  .prev-it-body {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.6;
+    color: var(--fg-light);
+    display: flex;
+    flex-direction: column;
+  }
+  .prev-it-body .ps { color: hsl(var(--brand-default)); }
+  .prev-it-body .cmd { color: var(--fg); }
+  .prev-it-body .sec { color: hsl(var(--code-block-4)); }
+  .prev-it-body .out { color: var(--fg-lighter); }
+  .prev-it-body .num { color: hsl(var(--code-block-2)); }
+  .prev-it-body .cursor {
+    display: inline-block;
+    width: 6px; height: 11px;
+    background: var(--brand);
+    vertical-align: -1px;
+    margin-left: 2px;
+    animation: blink 1.2s steps(1) infinite;
+  }
+  @keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+
+  /* ── Why this exists teaser ───────────────────────────────────────── */
+  .why {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+    position: relative;
+    z-index: 1;
+  }
+  .why-card {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (max-width: 760px) {
+    .why-card { grid-template-columns: 1fr; gap: 18px; padding: 24px; }
+  }
+  .why-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-lighter);
+    white-space: nowrap;
+  }
+  .why-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 8px hsl(var(--brand-default) / 0.6);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .why-text {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg-light);
+    text-wrap: pretty;
+    margin: 0;
+  }
+  .why-text strong { color: var(--fg); font-weight: 500; }
+  .why-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--brand);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-decoration: none;
+    padding: 10px 16px;
+    border: 1px solid hsl(var(--brand-default) / 0.3);
+    border-radius: 999px;
+    background: hsl(var(--brand-default) / 0.06);
+    white-space: nowrap;
+    transition: background .15s, border-color .15s;
+  }
+  .why-cta:hover {
+    background: hsl(var(--brand-default) / 0.12);
+    border-color: hsl(var(--brand-default) / 0.5);
+  }
+</style>
+</head>
+<body>
+
+<main>
+
+  <section class="hero">
+    <span class="eyebrow"><span class="pulse"></span>desktop kits · unofficial · v1.0</span>
+    <h1>Your whole desk, in <span class="accent">Supabase green</span>.</h1>
+    <p>A growing set of Supabase-flavored builders — wallpapers, browser, editor, terminal. Pick a surface, tweak it live, download the package.</p>
+  </section>
+
+  <section class="kits">
+
+    <a class="kit is-live" href="wallpapers/index.html">
+      <div class="kit-preview">
+        <div class="prev-wp">
+          <svg class="mark" viewBox="0 0 109 113" fill="none" aria-hidden="true">
+            <path d="M63.71 110.28C60.85 113.89 55.05 111.91 54.98 107.31L53.97 40.06H99.19C107.38 40.06 111.95 49.52 106.86 55.94L63.71 110.28Z" fill="#249361"/>
+            <path d="M45.32 2.07C48.18 -1.53 53.97 0.44 54.04 5.04L54.48 72.29H9.83C1.64 72.29 -2.93 62.83 2.17 56.42L45.32 2.07Z" fill="#3ECF8E"/>
+          </svg>
+        </div>
+      </div>
+      <div class="kit-body">
+        <div class="kit-heading">
+          <h2 class="kit-title">Wallpapers</h2>
+          <span class="kit-status live">live</span>
+        </div>
+        <p class="kit-desc">Nine Supabase-inspired wallpapers scalable to any resolution (seven are also mobile‑friendly). Pick a shape and a device — from iPhone 17 Pro to 8K ultrawide — and download individually or bundle the whole set.</p>
+        <div class="kit-meta">
+          <span><span class="m-k">outputs</span> SVG · PNG · ZIP</span>
+          <span><span class="m-k">devices</span> desktop · mobile · tablet</span>
+          <span><span class="m-k">variations</span> 9</span>
+        </div>
+        <span class="kit-cta">open builder →</span>
+      </div>
+    </a>
+
+    <a class="kit is-live" href="chrome-theme/index.html">
+      <div class="kit-preview">
+        <div class="prev-cr">
+          <div class="prev-cr-tabs">
+            <div class="prev-cr-tab act"><span class="fav"></span>New Tab</div>
+            <div class="prev-cr-tab"><span class="fav" style="background:#222"></span>GitHub</div>
+            <div class="prev-cr-tab"><span class="fav" style="background:#222"></span>Linear</div>
+          </div>
+          <div class="prev-cr-tb">
+            <div class="prev-cr-omni">chrome://newtab</div>
+          </div>
+          <div class="prev-cr-body">
+            <svg class="mark" viewBox="0 0 109 113" fill="none" aria-hidden="true">
+              <path d="M63.71 110.28C60.85 113.89 55.05 111.91 54.98 107.31L53.97 40.06H99.19C107.38 40.06 111.95 49.52 106.86 55.94L63.71 110.28Z" fill="#249361"/>
+              <path d="M45.32 2.07C48.18 -1.53 53.97 0.44 54.04 5.04L54.48 72.29H9.83C1.64 72.29 -2.93 62.83 2.17 56.42L45.32 2.07Z" fill="#3ECF8E"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="kit-body">
+        <div class="kit-heading">
+          <h2 class="kit-title">Chrome theme</h2>
+          <span class="kit-status live">live</span>
+        </div>
+        <p class="kit-desc">Three near-black variants — Deep Dark, Classic Dark, Midnight Green. Tweak the frame pattern, green glow and accent intensity, then load unpacked into <code>chrome://extensions</code>.</p>
+        <div class="kit-meta">
+          <span><span class="m-k">outputs</span> unpacked extension · ZIP</span>
+          <span><span class="m-k">presets</span> 6 + custom</span>
+          <span><span class="m-k">extras</span> Studio-style new tab</span>
+        </div>
+        <span class="kit-cta">open builder →</span>
+      </div>
+    </a>
+
+    <a class="kit is-live" href="vscode-theme/index.html">
+      <div class="kit-preview">
+        <div class="prev-vs">
+          <div class="prev-vs-side"><span></span><span></span><span></span><span></span></div>
+          <div class="prev-vs-tabs">
+            <div class="prev-vs-tab act">index.ts</div>
+            <div class="prev-vs-tab">schema.sql</div>
+          </div>
+          <div class="prev-vs-code">
+            <div class="ln"><span class="num">1</span><span class="cm">// supabase client</span></div>
+            <div class="ln"><span class="num">2</span><span class="kw">import</span> <span class="id">{ createClient }</span> <span class="kw">from</span> <span class="st">'@supabase/supabase-js'</span></div>
+            <div class="ln"><span class="num">3</span></div>
+            <div class="ln"><span class="num">4</span><span class="kw">const</span> <span class="fn">supabase</span> <span class="id">=</span> <span class="fn">createClient</span><span class="pn">(</span><span class="id">url</span>, <span class="id">key</span><span class="pn">)</span></div>
+            <div class="ln"><span class="num">5</span></div>
+            <div class="ln"><span class="num">6</span><span class="kw">const</span> <span class="id">{ data }</span> <span class="id">=</span> <span class="kw">await</span> <span class="id">supabase</span></div>
+            <div class="ln"><span class="num">7</span>&nbsp;&nbsp;<span class="pn">.</span><span class="fn">from</span><span class="pn">(</span><span class="st">'posts'</span><span class="pn">)</span></div>
+            <div class="ln"><span class="num">8</span>&nbsp;&nbsp;<span class="pn">.</span><span class="fn">select</span><span class="pn">(</span><span class="st">'*'</span><span class="pn">)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="kit-body">
+        <div class="kit-heading">
+          <h2 class="kit-title">VS Code theme</h2>
+          <span class="kit-status live">live</span>
+        </div>
+        <p class="kit-desc">Six Supabase-faithful editor palettes with syntax + chrome knobs, a live full-IDE preview, and a built-in terminal that auto-matches. Ships as a <code>.vsix</code> for VS Code, Cursor, Windsurf and VSCodium.</p>
+        <div class="kit-meta">
+          <span><span class="m-k">outputs</span> .vsix · color-theme.json · settings snippet</span>
+          <span><span class="m-k">presets</span> 6 + custom</span>
+          <span><span class="m-k">editors</span> VS Code · Cursor · Windsurf · VSCodium</span>
+        </div>
+        <span class="kit-cta">open builder →</span>
+      </div>
+    </a>
+
+    <a class="kit is-live" href="terminal-theme/index.html">
+      <div class="kit-preview">
+        <div class="prev-it">
+          <div class="prev-it-bar"><span></span><span></span><span></span></div>
+          <div class="prev-it-body">
+            <div><span class="ps">~/acme</span> <span class="sec">❯</span> <span class="cmd">supabase start</span></div>
+            <div><span class="out">Started local development setup.</span></div>
+            <div><span class="out">  API URL:   http://127.0.0.1:<span class="num">54321</span></span></div>
+            <div><span class="out">  DB URL:    postgresql://postgres@127.0.0.1:<span class="num">54322</span></span></div>
+            <div><span class="out">  Studio:    http://127.0.0.1:<span class="num">54323</span></span></div>
+            <div><span class="ps">~/acme</span> <span class="sec">❯</span> <span class="cursor"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="kit-body">
+        <div class="kit-heading">
+          <h2 class="kit-title">Terminal theme</h2>
+          <span class="kit-status live">live</span>
+        </div>
+        <p class="kit-desc">Six Supabase-faithful palettes with mood knobs, a live macOS-style preview and a supabase-themed session. Exports to <code>.itermcolors</code>, Terminal.app, Kitty, Alacritty, Ghostty and Warp.</p>
+        <div class="kit-meta">
+          <span><span class="m-k">outputs</span> .itermcolors · .terminal · TOML · YAML · more</span>
+          <span><span class="m-k">presets</span> 6 + custom</span>
+        </div>
+        <span class="kit-cta">open builder →</span>
+      </div>
+    </a>
+
+    <a class="kit is-live" href="raycast-theme/index.html">
+      <div class="kit-preview">
+        <div class="prev-rc">
+          <div class="prev-rc-win">
+            <div class="prev-rc-search">
+              <span class="ic"></span>
+              <span class="q">supabase</span>
+              <span class="kbd">⌥ Space</span>
+            </div>
+            <div class="prev-rc-sec">Commands</div>
+            <div class="prev-rc-row sel"><span class="dot"></span>Open Supabase Studio</div>
+            <div class="prev-rc-row"><span class="dot"></span>New Project</div>
+            <div class="prev-rc-row"><span class="dot"></span>Run SQL Snippet</div>
+          </div>
+        </div>
+      </div>
+      <div class="kit-body">
+        <div class="kit-heading">
+          <h2 class="kit-title">Raycast theme</h2>
+          <span class="kit-status live">live</span>
+        </div>
+        <p class="kit-desc">Six Supabase-faithful launcher palettes — pick a mood, then install in one click. Raycast themes are deeplinks, so the output is a <code>raycast://theme?…</code> URL, a copyable JSON blob, or an import dialog.</p>
+        <div class="kit-meta">
+          <span><span class="m-k">outputs</span> raycast:// deeplink · JSON</span>
+          <span><span class="m-k">presets</span> 6 + custom</span>
+        </div>
+        <span class="kit-cta">open builder →</span>
+      </div>
+    </a>
+
+  </section>
+
+  <section class="why">
+    <div class="why-card">
+      <span class="why-eyebrow">why this exists</span>
+      <p class="why-text">The new Claude <a href="https://claude.ai/design" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,0.25);">design product</a> launched <strong>three days</strong> before I started at Supabase, so I spent the weekend before my start date using it to build themes for my new work laptop. <strong>This theme-building site unexpectedly popped out along the way</strong> — unofficial, fan-made, one kit at a time.</p>
+      <a class="why-cta" href="about.html">the whole story →</a>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

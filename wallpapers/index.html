@@ -1,0 +1,1763 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Supabase wallpapers</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 109 113'><path d='M63.71 110.28c-2.86 3.6-8.66 1.63-8.73-2.97L53.97 40.06h45.22c8.19 0 12.76 9.46 7.67 15.88z' fill='%233ECF8E'/><path d='M45.32 2.07c2.86-3.6 8.66-1.63 8.73 2.97l.44 67.25H9.83c-8.19 0-12.76-9.46-7.67-15.88z' fill='%233ECF8E'/></svg>" />
+  <link rel="stylesheet" href="../chrome-theme/shared/colors_and_type.css" />
+  <link rel="stylesheet" href="../kits-nav.css?v=4" />
+  <script defer src="../kits-nav.js?v=4" data-active="wallpapers" data-root="../" data-tagline="scalable to any screen — SVG out, pixel-perfect PNG in."></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: var(--bg-alt); font-family: 'Custom Font', 'Inter', ui-sans-serif, system-ui, sans-serif; color: var(--fg); }
+    * { box-sizing: border-box; }
+
+    /* ── Initial-load splash (pulsing Supabase mark) ─────────────────── */
+    #splash {
+      position: fixed; inset: 0;
+      background: var(--bg-alt);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 18px;
+      z-index: 9999;
+      transition: opacity .4s ease;
+    }
+    #splash.fading { opacity: 0; pointer-events: none; }
+    #splash svg { width: 56px; height: 58px; animation: sb-pulse 1.6s ease-in-out infinite; transform-origin: center; }
+    #splash .splash-label {
+      font-family: 'Source Code Pro', ui-monospace, monospace;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: hsl(0 0% 38%);
+    }
+    @keyframes sb-pulse {
+      0%   { opacity: 0.55; transform: scale(0.96); filter: drop-shadow(0 0 0 hsl(var(--brand-default) / 0)); }
+      50%  { opacity: 1;    transform: scale(1.04); filter: drop-shadow(0 0 14px hsl(var(--brand-default) / 0.55)); }
+      100% { opacity: 0.55; transform: scale(0.96); filter: drop-shadow(0 0 0 hsl(var(--brand-default) / 0)); }
+    }
+
+    /* ── Page layout: content column + sticky customize rail ─────────── */
+    .shell {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 56px;
+      min-height: 100vh;
+      padding: 56px 56px 120px;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+    @media (max-width: 1100px) {
+      .shell { grid-template-columns: 1fr; }
+      .rail { position: static !important; max-height: none !important; }
+    }
+
+    .main { display: flex; flex-direction: column; gap: 56px; min-width: 0; }
+
+    /* ── Hero — matches the theme-kit shell ──────────────────────────── */
+    .hero { display: flex; flex-direction: column; gap: 10px; }
+    .hero .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px;
+      background: hsl(var(--brand-default) / 0.08);
+      border: 1px solid hsl(var(--brand-default) / 0.25);
+      color: var(--brand);
+      font-family: var(--font-mono); font-size: 11px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 14px;
+      align-self: flex-start;
+    }
+    .hero .eyebrow .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 8px var(--brand); }
+    .hero h1 { font-size: 36px; line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; margin: 0 0 10px; max-width: 820px; color: var(--fg); }
+    .hero h1 .accent { color: var(--brand); }
+    .hero p { font-size: 15px; line-height: 1.55; color: var(--fg-light); max-width: 720px; margin: 0; }
+    .hero p code { background: hsl(0 0% 12%); border: 1px solid hsl(0 0% 18%); padding: 1px 6px; border-radius: 3px; font-size: 13px; font-family: var(--font-mono); }
+
+    /* ── Site footer — matches the theme-kit shell ───────────────────── */
+    .site-footer {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 28px 56px 48px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--fg-lighter);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .site-footer a { color: var(--fg-light); text-decoration: none; }
+    .site-footer a:hover { color: var(--brand); }
+
+    /* ── Wallpaper cards ─────────────────────────────────────────────── */
+    .variations { display: flex; flex-direction: column; gap: 72px; }
+    .variation { display: flex; flex-direction: column; gap: 16px; }
+    .variation-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+    .variation-header .button-row { margin-top: 0; align-self: flex-start; }
+    .variation-title { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; color: var(--fg); margin: 0; }
+    .variation-desc { font-size: 14px; color: hsl(0 0% 70.6%); max-width: 680px; line-height: 1.6; margin: 8px 0 0; }
+    .variation-num { font-family: 'Source Code Pro', monospace; font-size: 12px; color: hsl(0 0% 38%); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .artboard-wrap {
+      position: relative;
+      width: 100%;
+      border: 1px solid hsl(0 0% 18%);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg-alt);
+      transition: aspect-ratio .3s ease;
+    }
+    .artboard-wrap svg { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+
+    .footer-row { display: flex; justify-content: space-between; align-items: center; }
+    .footer-meta { font-family: 'Source Code Pro', monospace; font-size: 11px; color: hsl(0 0% 38%); letter-spacing: 0.04em; }
+
+    .button-row { display: flex; gap: 8px; }
+    .download-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--brand); color: var(--bg-alt); border: 0;
+      padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px;
+      cursor: pointer; font-family: inherit; letter-spacing: -0.01em;
+      transition: filter .15s;
+    }
+    .download-btn:hover:not(:disabled) { filter: brightness(1.05); }
+    .download-btn:disabled { opacity: 0.5; cursor: wait; }
+    .download-btn.ghost { background: hsl(0 0% 12%); color: hsl(0 0% 90%); border: 1px solid hsl(0 0% 22%); }
+    .download-btn.ghost:hover:not(:disabled) { background: hsl(0 0% 16%); }
+
+    /* ── Right-side Customize rail ───────────────────────────────────── */
+    .rail {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: hsl(0 0% 7%);
+      border: 1px solid hsl(0 0% 16%);
+      border-radius: 10px;
+      padding: 20px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .rail h2 {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: hsl(0 0% 70.6%); margin: 0;
+      font-family: 'Source Code Pro', monospace;
+    }
+    .rail-section { display: flex; flex-direction: column; gap: 8px; }
+    .rail-section + .rail-section { padding-top: 16px; border-top: 1px solid hsl(0 0% 14%); }
+    .rail-label {
+      font-family: 'Source Code Pro', monospace; font-size: 11px;
+      color: hsl(0 0% 53.7%); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    /* Segmented button group (aspect, tier) */
+    .seg { display: grid; gap: 4px; background: hsl(0 0% 4%); border: 1px solid hsl(0 0% 14%); border-radius: 6px; padding: 3px; }
+    .seg.seg-3 { grid-template-columns: repeat(3, 1fr); }
+    .seg.seg-5 { grid-template-columns: repeat(5, 1fr); }
+    .seg.seg-2 { grid-template-columns: repeat(2, 1fr); }
+    .seg button {
+      background: transparent; border: 0; color: hsl(0 0% 70.6%);
+      font-family: 'Source Code Pro', monospace; font-size: 11px;
+      padding: 8px 2px; border-radius: 4px; cursor: pointer;
+      display: flex; flex-direction: column; gap: 2px; align-items: center;
+      transition: background .12s, color .12s;
+    }
+    .seg.seg-3 button { font-size: 12px; padding: 8px 6px; }
+    .seg button:hover { color: var(--fg); }
+    .seg button.active { background: hsl(var(--brand-default) / 0.12); color: var(--fg); box-shadow: inset 0 0 0 1px hsl(var(--brand-default) / 0.4); }
+    .seg button small { font-size: 10px; color: hsl(0 0% 38%); }
+    .seg button.active small { color: var(--brand); }
+
+    /* Dropdown (presets) */
+    .rail select, .rail input[type=text] {
+      width: 100%;
+      background: hsl(0 0% 4%);
+      border: 1px solid hsl(0 0% 18%);
+      border-radius: 6px;
+      padding: 9px 10px;
+      color: var(--fg);
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color .12s;
+    }
+    .rail select:focus, .rail input[type=text]:focus { border-color: var(--brand); }
+    .rail select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%23888' d='M5 7L1 3h8z'/></svg>"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+
+    /* Row: label + inline control */
+    .rail-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .rail-row label { color: hsl(0 0% 70.6%); font-size: 13px; }
+    .rail-row input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 140px; height: 4px; background: hsl(0 0% 18%); border-radius: 2px; outline: none;
+    }
+    .rail-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--brand); cursor: pointer; }
+    .rail-row input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--brand); cursor: pointer; }
+
+    /* Toggle switch */
+    .switch {
+      position: relative; width: 32px; height: 18px;
+      background: hsl(0 0% 18%); border-radius: 999px;
+      cursor: pointer; transition: background .15s;
+      flex-shrink: 0; border: 0; padding: 0;
+    }
+    .switch.on { background: var(--brand); }
+    .switch::after { content:''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: white; border-radius: 50%; transition: transform .15s; }
+    .switch.on::after { transform: translateX(14px); }
+
+    .rail-res-display {
+      font-family: 'Source Code Pro', monospace; font-size: 11px;
+      color: hsl(0 0% 53.7%); letter-spacing: 0.04em;
+      padding: 8px 10px; background: hsl(0 0% 4%); border: 1px solid hsl(0 0% 14%); border-radius: 5px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .rail-res-display .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--brand); box-shadow: 0 0 6px hsl(var(--brand-default) / 0.53); }
+
+    .bundle-btn {
+      width: 100%; justify-content: center;
+      padding: 11px 14px; font-size: 13px;
+    }
+
+    .rail-foot {
+      font-size: 11px; color: hsl(0 0% 38%); line-height: 1.5;
+      font-family: 'Source Code Pro', monospace;
+    }
+  </style>
+</head>
+<body>
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <rect width="200" height="200" fill="#0a0a0a"/>
+      <g transform="translate(45 44) scale(1.0)">
+        <path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="#3ECF8E"/>
+        <path d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z" fill="#3ECF8E"/>
+      </g>
+    </svg>
+  </template>
+  <div id="splash" aria-hidden="true">
+    <svg viewBox="0 0 109 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="url(#sp0)"/>
+      <path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="url(#sp1)" fill-opacity="0.2"/>
+      <path d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z" fill="#3ECF8E"/>
+      <defs>
+        <linearGradient id="sp0" x1="53.97" y1="54.97" x2="94.16" y2="71.83" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#249361"/><stop offset="1" stop-color="#3ECF8E"/>
+        </linearGradient>
+        <linearGradient id="sp1" x1="36.16" y1="30.58" x2="54.48" y2="65.08" gradientUnits="userSpaceOnUse">
+          <stop/><stop offset="1" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="splash-label">Loading wallpapers</div>
+  </div>
+  <div id="root"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" data-inlined-from="wp-constants.jsx">
+// Shared constants — must load before sb-defs.jsx / wallpapers-all.jsx
+// ─────────────────────────────────────────────────────────────────────
+// Resolution / aspect model
+// ─────────────────────────────────────────────────────────────────────
+// Layout is aspect-ratio driven. Within an aspect ratio, changing 2K→4K→8K
+// does not change the layout — it just scales the exported pixels.
+// The viewBox we pick per aspect:
+//   single  16:9  →  7680 × 4320
+//   dual    32:9  →  7680 × 2160
+//   ultra   21:9  →  7680 × 3291  (21/9 ≈ 2.3333 ratio)
+
+const ASPECT_BASE = {
+  single: { W: 7680, H: 4320, ratio: '16:9',  label: 'Single monitor'     },
+  dual:   { W: 7680, H: 2160, ratio: '32:9',  label: 'Dual monitor'       },
+  ultra:  { W: 7680, H: 3291, ratio: '21:9',  label: 'Ultrawide monitor'  },
+  // Mobile / Tablet: cropped from the single-monitor source canvas.
+  // sourceAspect='single' means the wallpaper is rendered at 16:9 and center-cropped.
+  mobile: { W: 7680, H: 4320, ratio: 'portrait', label: 'Mobile', sourceAspect: 'single', portrait: true },
+  tablet: { W: 7680, H: 4320, ratio: 'portrait', label: 'Tablet', sourceAspect: 'single', portrait: true },
+};
+
+// Tier multipliers against each aspect's *per-screen* native size.
+// 4K single = 3840×2160 (1× the 4K-per-screen baseline).
+// 2K =  0.666×, 4K = 1×, 8K = 2×    relative to the 4K per-screen baseline,
+// but we want 8K single = 7680×4320, so scale the *viewBox-base* by:
+//   2K → 0.333, 4K → 0.5, 8K → 1.0 against our viewBox base (7680×H).
+// Simpler: pick target size directly per aspect × tier.
+const RES_MATRIX = {
+  single: {
+    '2K': { w: 2560,  h: 1440 },
+    '4K': { w: 3840,  h: 2160 },
+    '8K': { w: 7680,  h: 4320 },
+  },
+  dual: {
+    '2K': { w: 5120,  h: 1440 },
+    '4K': { w: 7680,  h: 2160 },
+    '8K': { w: 15360, h: 4320 },
+  },
+  ultra: {
+    '2K': { w: 2560,  h: 1097 },
+    '4K': { w: 3840,  h: 1646 },
+    '8K': { w: 7680,  h: 3291 },
+  },
+};
+
+// Backward-compatible global (old components read W/H directly). Components
+// refactored to accept {W,H} props use their props; legacy ones fall back to these.
+let W = ASPECT_BASE.dual.W;
+let H = ASPECT_BASE.dual.H;
+
+// Helper: resolve {W,H} for a component — uses explicit props, else aspect base, else globals.
+function dims(props) {
+  if (props && props.W && props.H) return { W: props.W, H: props.H };
+  if (props && props.aspect && ASPECT_BASE[props.aspect]) return ASPECT_BASE[props.aspect];
+  return { W, H };
+}
+
+const SB_GREEN = '#3ECF8E';
+const SB_GREEN_DEEP = '#249361';
+const BG = '#121212';
+const BG_DEEP = '#0a0a0a';
+const FG = '#FAFAFA';
+const FG_LIGHT = 'hsl(0 0% 70.6%)';
+const FG_LIGHTER = 'hsl(0 0% 53.7%)';
+const FG_MUTED = 'hsl(0 0% 38%)';
+const BORDER = 'hsl(0 0% 18%)';
+const BORDER_MUTED = 'hsl(0 0% 14.1%)';
+const SURFACE_100 = 'hsl(0 0% 12.2%)';
+const SURFACE_75 = 'hsl(0 0% 9%)';
+
+function mulberry32(seed) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+Object.assign(window, {
+  W, H, ASPECT_BASE, RES_MATRIX, dims,
+  SB_GREEN, SB_GREEN_DEEP, BG, BG_DEEP, FG, FG_LIGHT, FG_LIGHTER, FG_MUTED,
+  BORDER, BORDER_MUTED, SURFACE_100, SURFACE_75, mulberry32,
+});
+</script>
+  <script type="text/babel" data-inlined-from="sb-defs.jsx">
+// Shared inline SVG defs for the Supabase mark and wordmark.
+// Use as <use href="#sb-mark"/> inside any <svg>.
+
+function SbDefs() {
+  return (
+    <defs>
+      <g id="sb-mark">
+        <path
+          d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z"
+          fill={SB_GREEN}
+        />
+        <path
+          d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z"
+          fill={SB_GREEN}
+        />
+      </g>
+      <g id="sb-wordmark-text" fill={FG}>
+        <path d="M151.397 66.7608C151.996 72.3621 157.091 81.9642 171.877 81.9642C184.764 81.9642 190.959 73.7624 190.959 65.7607C190.959 58.559 186.063 52.6577 176.373 50.6571L169.379 49.1569C166.682 48.6568 164.884 47.1565 164.884 44.7559C164.884 41.9552 167.681 39.8549 171.178 39.8549C176.772 39.8549 178.87 43.5556 179.27 46.4564L190.359 43.9558C189.76 38.6546 185.064 29.7527 171.078 29.7527C160.488 29.7527 152.696 37.0543 152.696 45.8561C152.696 52.7576 156.991 58.4591 166.482 60.5594L172.976 62.0598C176.772 62.8599 178.271 64.6605 178.271 66.8609C178.271 69.4615 176.173 71.762 171.777 71.762C165.983 71.762 163.085 68.1611 162.786 64.2602L151.397 66.7608Z" transform="translate(-151 0)" />
+        <path d="M233.421 80.4639H246.109C245.909 78.7635 245.609 75.3628 245.609 71.5618V31.2529H232.321V59.8592C232.321 65.5606 228.925 69.5614 223.031 69.5614C216.837 69.5614 214.039 65.1604 214.039 59.6592V31.2529H200.752V62.3599C200.752 73.0622 207.545 81.7642 219.434 81.7642C224.628 81.7642 230.325 79.7638 233.022 75.1627C233.022 77.1631 233.221 79.4636 233.421 80.4639Z" transform="translate(-151 0)" />
+        <path d="M273.076 99.4682V75.663C275.473 78.9636 280.469 81.6644 287.263 81.6644C301.149 81.6644 310.439 70.6617 310.439 55.7584C310.439 41.1553 302.148 30.1528 287.762 30.1528C280.37 30.1528 274.875 33.4534 272.677 37.2544V31.253H259.79V99.4682H273.076ZM297.352 55.8585C297.352 64.6606 291.958 69.7616 285.164 69.7616C278.372 69.7616 272.877 64.5605 272.877 55.8585C272.877 47.1566 278.372 42.0554 285.164 42.0554C291.958 42.0554 297.352 47.1566 297.352 55.8585Z" transform="translate(-151 0)" />
+        <path d="M317.964 67.0609C317.964 74.7627 324.357 81.8643 334.848 81.8643C342.139 81.8643 346.835 78.4634 349.332 74.5625C349.332 76.463 349.532 79.1635 349.832 80.4639H362.02C361.72 78.7635 361.422 75.2627 361.422 72.6622V48.4567C361.422 38.5545 355.627 29.7527 340.043 29.7527C326.855 29.7527 319.761 38.2544 318.963 45.9562L330.751 48.4567C331.151 44.1558 334.348 40.455 340.141 40.455C345.737 40.455 348.434 43.3556 348.434 46.8564C348.434 48.5568 347.536 49.9572 344.738 50.3572L332.65 52.1576C324.458 53.3579 317.964 58.2589 317.964 67.0609ZM337.644 71.962C333.349 71.962 331.25 69.1614 331.25 66.2608C331.25 62.4599 333.947 60.5594 337.345 60.0594L348.434 58.359V60.5594C348.434 69.2615 343.239 71.962 337.644 71.962Z" transform="translate(-151 0)" />
+        <path d="M387.703 80.4641V74.4627C390.299 78.6637 395.494 81.6644 402.288 81.6644C416.276 81.6644 425.467 70.5618 425.467 55.6585C425.467 41.0552 417.174 29.9528 402.788 29.9528C395.494 29.9528 390.1 33.1535 387.902 36.6541V8.04785H374.815V80.4641H387.703ZM412.178 55.7584C412.178 64.7605 406.784 69.7616 399.99 69.7616C393.297 69.7616 387.703 64.6606 387.703 55.7584C387.703 46.7564 393.297 41.8554 399.99 41.8554C406.784 41.8554 412.178 46.7564 412.178 55.7584Z" transform="translate(-151 0)" />
+        <path d="M432.99 67.0609C432.99 74.7627 439.383 81.8643 449.873 81.8643C457.165 81.8643 461.862 78.4634 464.358 74.5625C464.358 76.463 464.559 79.1635 464.858 80.4639H477.046C476.748 78.7635 476.448 75.2627 476.448 72.6622V48.4567C476.448 38.5545 470.653 29.7527 455.068 29.7527C441.881 29.7527 434.788 38.2544 433.989 45.9562L445.776 48.4567C446.177 44.1558 449.374 40.455 455.167 40.455C460.763 40.455 463.46 43.3556 463.46 46.8564C463.46 48.5568 462.561 49.9572 459.763 50.3572L447.676 52.1576C439.484 53.3579 432.99 58.2589 432.99 67.0609ZM452.671 71.962C448.375 71.962 446.276 69.1614 446.276 66.2608C446.276 62.4599 448.973 60.5594 452.371 60.0594L463.46 58.359V60.5594C463.46 69.2615 458.265 71.962 452.671 71.962Z" transform="translate(-151 0)" />
+        <path d="M485.645 66.7608C486.243 72.3621 491.339 81.9642 506.124 81.9642C519.012 81.9642 525.205 73.7624 525.205 65.7607C525.205 58.559 520.311 52.6577 510.62 50.6571L503.626 49.1569C500.929 48.6568 499.132 47.1565 499.132 44.7559C499.132 41.9552 501.928 39.8549 505.425 39.8549C511.021 39.8549 513.118 43.5556 513.519 46.4564L524.607 43.9558C524.007 38.6546 519.312 29.7527 505.326 29.7527C494.735 29.7527 486.944 37.0543 486.944 45.8561C486.944 52.7576 491.238 58.4591 500.73 60.5594L507.224 62.0598C511.021 62.8599 512.519 64.6605 512.519 66.8609C512.519 69.4615 510.421 71.762 506.025 71.762C500.23 71.762 497.334 68.1611 497.034 64.2602L485.645 66.7608Z" transform="translate(-151 0)" />
+        <path d="M545.385 50.2571C545.685 45.7562 549.482 40.5549 556.375 40.5549C563.967 40.5549 567.165 45.3561 567.365 50.2571H545.385ZM568.664 63.0601C567.065 67.4609 563.668 70.5617 557.474 70.5617C550.88 70.5617 545.385 65.8606 545.087 59.3593H580.252C580.252 59.159 580.451 57.1587 580.451 55.2582C580.451 39.4547 571.361 29.7527 556.175 29.7527C543.588 29.7527 531.998 39.9548 531.998 55.6584C531.998 72.262 543.886 81.9642 557.374 81.9642C569.462 81.9642 577.255 74.8626 579.753 66.3607L568.664 63.0601Z" transform="translate(-151 0)" />
+      </g>
+    </defs>
+  );
+}
+
+// Render the lockup (mark + wordmark) at given scale, centered on (cx, cy)
+// lockup native is about 720 × 113 with 45px gap between mark (109w) and text (580-151=429w)
+function SbLockup({ cx, cy, scale = 1, showWordmark = true, textColor = FG }) {
+  // total width when showWordmark: 109 + 60 (gap) + 429 = 598
+  const totalW = showWordmark ? 598 : 109;
+  const totalH = 113;
+  const x0 = cx - (totalW * scale) / 2;
+  const y0 = cy - (totalH * scale) / 2;
+  return (
+    <g transform={`translate(${x0} ${y0}) scale(${scale})`}>
+      <use href="#sb-mark" />
+      {showWordmark && (
+        <g transform="translate(169 0)">
+          {/* Override wordmark color via currentColor-style: re-inline with given color if not FG */}
+          {textColor === FG ? (
+            <use href="#sb-wordmark-text" />
+          ) : (
+            <g fill={textColor}>
+              <use href="#sb-wordmark-text" style={{ color: textColor }} />
+            </g>
+          )}
+        </g>
+      )}
+    </g>
+  );
+}
+
+// Standard corner lockup — used consistently across all wallpapers when
+// showWordmark is true. Always bottom-right, always the same relative size.
+// W / H are the canvas dimensions. `showWordmark` controls whether the
+// "supabase" lettering is drawn alongside the mark.
+function SbCornerLockup({ W, H, corner = 'br', showWordmark = true }) {
+  // Lockup size as a fraction of the canvas min-dim.
+  const scale = Math.min(W, H * 2) / 4600;
+  const totalW = (showWordmark ? 598 : 109) * scale;
+  const totalH = 113 * scale;
+  const marginX = Math.min(W, H * 2) * 0.028;
+  const marginY = Math.min(W, H * 2) * 0.028;
+  let cx, cy;
+  if (corner === 'bl') { cx = marginX + totalW / 2;         cy = H - marginY - totalH / 2; }
+  else if (corner === 'tr') { cx = W - marginX - totalW / 2; cy = marginY + totalH / 2; }
+  else if (corner === 'tl') { cx = marginX + totalW / 2;     cy = marginY + totalH / 2; }
+  else                      { cx = W - marginX - totalW / 2; cy = H - marginY - totalH / 2; }
+  return <SbLockup cx={cx} cy={cy} scale={scale} showWordmark={showWordmark} />;
+}
+
+Object.assign(window, { SbDefs, SbLockup, SbCornerLockup });
+</script>
+  <script type="text/babel" data-inlined-from="wallpapers-all.jsx">
+// Kept + fixed originals. Each accepts {W, H} or {aspect} props.
+// Policy: atmospheric wallpapers use SbCornerLockup (standard bottom-right).
+// Hero wallpapers show the mark alone; showWordmark adds the same corner lockup.
+
+// ──────────────────────────────────────────────────────────────
+// WP2 — Brand Field (atmospheric)
+// Lockup bumped ~1.4× via its own centered slot (the only exception:
+// WP2's lockup IS the composition, so it stays centered-large).
+// ──────────────────────────────────────────────────────────────
+function WP2_GridField(props) {
+  const { id = 'wp2', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const spacing = Math.max(56, Math.round(H / 40));
+  const dots = [];
+  for (let y = spacing; y < H; y += spacing) {
+    for (let x = spacing; x < W; x += spacing) {
+      const dy = (y - H * 0.7) / H;
+      const dxn = (x - W / 2) / W;
+      const dist = Math.sqrt(dy * dy + dxn * dxn * 0.25);
+      const brightness = Math.max(0.05, 0.7 - dist * 2.2);
+      dots.push(<circle key={`${x}-${y}`} cx={x} cy={y} r={2.4} fill={SB_GREEN} opacity={0.1 + brightness * 0.28 * glow} />);
+    }
+  }
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <radialGradient id={`${id}-glow`} cx="50%" cy="110%" r="70%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.45 * glow} />
+          <stop offset="25%" stopColor={SB_GREEN_DEEP} stopOpacity={0.22 * glow} />
+          <stop offset="60%" stopColor="#0f1a15" stopOpacity={0.3 * glow} />
+          <stop offset="100%" stopColor={BG} stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={`${id}-top`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} stopOpacity={1} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <rect width={W} height={H} fill={BG} />
+      <g>{dots}</g>
+      <rect width={W} height={H} fill={`url(#${id}-glow)`} />
+      <rect width={W} height={H * 0.15} fill={`url(#${id}-top)`} />
+      {showWordmark && (
+        <SbLockup cx={W / 2} cy={H / 2 + H * 0.02} scale={Math.min(W, H * 2) / 2850} showWordmark={true} />
+      )}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP4 — Horizon (hero→atmospheric): drop big mark, lockup only when opted in
+// ──────────────────────────────────────────────────────────────
+function WP4_Horizon(props) {
+  const { id = 'wp4', glow = 1, showWordmark = true, showSqlLine = true } = props;
+  const { W, H } = dims(props);
+  const cx = W / 2;
+  const horizonY = H * 0.72;
+  // Mark restored at vertical center of the canvas (above the horizon).
+  const markScale = Math.min(W, H * 2.2) / 900;
+  const markW = 109 * markScale, markH = 113 * markScale;
+  const mx = cx - markW / 2;
+  const my = H * 0.5 - markH / 2;
+  const sql = `select row_to_json(projects) from public.projects where status = 'building'`;
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} />
+          <stop offset="60%" stopColor={BG} />
+          <stop offset="85%" stopColor="#0d1a13" />
+          <stop offset="100%" stopColor="#0a140f" />
+        </linearGradient>
+        <radialGradient id={`${id}-sun`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.7 * glow} />
+          <stop offset="30%" stopColor={SB_GREEN} stopOpacity={0.3 * glow} />
+          <stop offset="70%" stopColor={SB_GREEN} stopOpacity={0.05 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={`${id}-aurora`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0} />
+          <stop offset="50%" stopColor={SB_GREEN} stopOpacity={0.22 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN_DEEP} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-sky)`} />
+      <ellipse cx={cx} cy={horizonY} rx={W * 0.34} ry={H * 0.37} fill={`url(#${id}-sun)`} />
+      <line x1={0} y1={horizonY} x2={W} y2={horizonY} stroke={SB_GREEN} strokeOpacity={0.22 * glow} strokeWidth={1.5} />
+      {Array.from({ length: 24 }).map((_, i) => {
+        const frac = i / 23;
+        const rayX = cx - W * 0.44 + frac * W * 0.88;
+        const endOffset = (frac - 0.5) * W * 0.5;
+        return <line key={i} x1={rayX} y1={horizonY} x2={cx + endOffset * 0.6} y2={horizonY - H * 0.43 - Math.abs(frac - 0.5) * H * 0.06} stroke={SB_GREEN} strokeOpacity={0.05 * glow + (1 - Math.abs(frac - 0.5)) * 0.08 * glow} strokeWidth={1} />;
+      })}
+      <rect x={0} y={horizonY} width={W} height={H - horizonY} fill={`url(#${id}-aurora)`} />
+      <g stroke={SB_GREEN} strokeOpacity={0.15 * glow} strokeWidth={1}>
+        {Array.from({ length: 14 }).map((_, i) => {
+          const t = (i + 1) / 14;
+          const y = horizonY + t * (H - horizonY);
+          return <line key={`h-${i}`} x1={0} y1={y} x2={W} y2={y} strokeOpacity={0.05 * glow + t * 0.12 * glow} />;
+        })}
+        {Array.from({ length: 40 }).map((_, i) => {
+          const t = (i - 19.5) / 20;
+          const xTop = cx + t * W * 0.156;
+          const xBot = cx + t * (W / 2 + W * 0.052);
+          return <line key={`v-${i}`} x1={xTop} y1={horizonY} x2={xBot} y2={H} strokeOpacity={0.06 * glow + (1 - Math.abs(t)) * 0.08 * glow} />;
+        })}
+      </g>
+      {showSqlLine && (
+        <text x={cx} y={H * 0.12} fill={FG_MUTED} fontFamily="'Source Code Pro', monospace" fontSize={Math.max(20, H * 0.0117)} letterSpacing={1.5} textAnchor="middle" opacity={0.6}>
+          {sql}
+        </text>
+      )}
+      <g transform={`translate(${mx} ${my}) scale(${markScale})`}>
+        <use href="#sb-mark" />
+      </g>
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="br" />}
+    </svg>
+  );
+}
+
+Object.assign(window, { WP2_GridField, WP4_Horizon });
+</script>
+  <script type="text/babel" data-inlined-from="wp-new-concepts.jsx">
+// Wallpaper concepts — iterations + new. All W/H-driven.
+// Atmospheric: SbCornerLockup. Hero: mark alone, showWordmark adds corner lockup.
+
+// ──────────────────────────────────────────────────────────────
+// WP2b — Ignition. Glow reseated: follows the curve's peak (right edge).
+// ──────────────────────────────────────────────────────────────
+function WP2b_Ignition(props) {
+  const { id = 'wp2b', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const spacing = Math.max(56, Math.round(H / 40));
+  const curveY = (x) => {
+    const t = x / W;
+    const eased = Math.pow(t, 2.1);
+    return H * 0.82 - eased * H * 0.55;
+  };
+  const tipX = W - W * 0.015;
+  const tipY = curveY(tipX);
+
+  const dots = [];
+  for (let y = spacing; y < H; y += spacing) {
+    for (let x = spacing; x < W; x += spacing) {
+      const cy = curveY(x);
+      const dy = (y - cy) / H;
+      const above = y < cy;
+      const dist = Math.abs(dy);
+      const brightness = above ? Math.max(0, 0.55 - dist * 2.6) : Math.max(0, 0.45 - dist * 1.5);
+      const op = 0.08 + brightness * 0.42 * glow;
+      dots.push(<circle key={`${x}-${y}`} cx={x} cy={y} r={2.4} fill={SB_GREEN} opacity={op} />);
+    }
+  }
+  const steps = 160;
+  const curvePts = Array.from({ length: steps + 1 }, (_, i) => {
+    const x = (i / steps) * W;
+    return `${x},${curveY(x)}`;
+  }).join(' L');
+
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <linearGradient id={`${id}-below`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.22 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </linearGradient>
+        <linearGradient id={`${id}-top`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} stopOpacity={1} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={0} />
+        </linearGradient>
+        <radialGradient id={`${id}-tipGlow`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.75 * glow} />
+          <stop offset="30%" stopColor={SB_GREEN} stopOpacity={0.28 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect width={W} height={H} fill={BG_DEEP} />
+      <path d={`M0,${H} L${curvePts} L${W},${H} Z`} fill={`url(#${id}-below)`} />
+      <g>{dots}</g>
+      <path d={`M${curvePts}`} fill="none" stroke={SB_GREEN} strokeOpacity={0.38 * glow} strokeWidth={2} />
+      <ellipse cx={tipX} cy={tipY} rx={H * 0.32} ry={H * 0.32} fill={`url(#${id}-tipGlow)`} />
+      <circle cx={tipX} cy={tipY} r={Math.max(10, H * 0.005)} fill={SB_GREEN} opacity={0.95 * glow} />
+      <rect width={W} height={H * 0.155} fill={`url(#${id}-top)`} />
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="bl" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP3b — Service Graph. Fills wide aspects with varied Y + peripheral nodes.
+// ──────────────────────────────────────────────────────────────
+function WP3b_Graph(props) {
+  const { id = 'wp3b', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const rand = mulberry32(11);
+  // Normalised positions spread 0.05..0.95 on both axes, intentionally irregular.
+  const nNorm = [
+    { name: 'auth',       nx: 0.07, ny: 0.22, size: 1.0 },
+    { name: 'database',   nx: 0.24, ny: 0.56, size: 1.7 },
+    { name: 'realtime',   nx: 0.38, ny: 0.18, size: 1.0 },
+    { name: 'storage',    nx: 0.47, ny: 0.83, size: 1.1 },
+    { name: 'edge',       nx: 0.60, ny: 0.35, size: 1.0 },
+    { name: 'vector',     nx: 0.73, ny: 0.70, size: 0.9 },
+    { name: 'queues',     nx: 0.82, ny: 0.22, size: 1.0 },
+    { name: 'analytics',  nx: 0.90, ny: 0.50, size: 0.9 },
+    { name: 'studio',     nx: 0.14, ny: 0.86, size: 0.9 },
+    { name: 'functions',  nx: 0.52, ny: 0.44, size: 0.9 },
+    { name: 'cron',       nx: 0.66, ny: 0.55, size: 0.8 },
+  ];
+  const nodes = nNorm.map(n => ({ ...n, x: n.nx * W, y: n.ny * H }));
+  // Build edges by picking each node's 1-2 nearest neighbours.
+  const edges = new Set();
+  for (let i = 0; i < nodes.length; i++) {
+    const dists = nodes.map((n, j) => ({ j, d: j === i ? Infinity : Math.hypot((n.x - nodes[i].x) / W, (n.y - nodes[i].y) / H) }));
+    dists.sort((a, b) => a.d - b.d);
+    const count = 1 + Math.floor(rand() * 2);
+    for (let k = 0; k < count && k < dists.length; k++) {
+      const a = Math.min(i, dists[k].j), b = Math.max(i, dists[k].j);
+      edges.add(`${a}-${b}`);
+    }
+  }
+  const edgeList = Array.from(edges).map(e => e.split('-').map(Number));
+
+  const stars = [];
+  for (let i = 0; i < 620; i++) {
+    stars.push(<circle key={i} cx={rand() * W} cy={rand() * H} r={rand() * 1.4 + 0.4} fill={FG} opacity={0.04 + rand() * 0.14} />);
+  }
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <radialGradient id={`${id}-vign`} cx="50%" cy="50%" r="72%">
+          <stop offset="0%" stopColor={BG} stopOpacity={0} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={0.85} />
+        </radialGradient>
+        <radialGradient id={`${id}-hub`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.55 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect width={W} height={H} fill={BG_DEEP} />
+      <g>{stars}</g>
+      <g>
+        {edgeList.map(([a, b], i) => {
+          const n1 = nodes[a], n2 = nodes[b];
+          const mx = (n1.x + n2.x) / 2, my = (n1.y + n2.y) / 2;
+          return (
+            <g key={i}>
+              <line x1={n1.x} y1={n1.y} x2={n2.x} y2={n2.y} stroke={SB_GREEN} strokeOpacity={0.22 * glow} strokeWidth={1.5} />
+              <circle cx={mx} cy={my} r={3} fill={SB_GREEN} opacity={0.45 * glow} />
+            </g>
+          );
+        })}
+      </g>
+      {nodes.map((n, i) => (
+        <circle key={`g-${i}`} cx={n.x} cy={n.y} r={Math.min(W, H) * 0.09 * n.size} fill={`url(#${id}-hub)`} />
+      ))}
+      {nodes.map((n, i) => {
+        const label = n.name;
+        const fontSize = Math.max(18, H * 0.0095);
+        const padX = fontSize * 1.1, padY = fontSize * 0.56;
+        const approxTextW = label.length * fontSize * 0.62;
+        const tagW = approxTextW + padX * 2;
+        const tagH = fontSize + padY * 2;
+        const tagX = n.x + Math.min(W, H) * 0.018;
+        const tagY = n.y - tagH / 2;
+        const ringR = Math.max(16, Math.min(W, H) * 0.008) * n.size;
+        const coreR = Math.max(8, Math.min(W, H) * 0.0037) * n.size;
+        return (
+          <g key={`n-${i}`}>
+            <circle cx={n.x} cy={n.y} r={ringR} fill="none" stroke={SB_GREEN} strokeOpacity={0.6} strokeWidth={1.5} />
+            <circle cx={n.x} cy={n.y} r={coreR} fill={SB_GREEN} />
+            <rect x={tagX} y={tagY} width={tagW} height={tagH} rx={tagH / 2} fill={SURFACE_100} stroke={BORDER} strokeWidth={1.5} />
+            <circle cx={tagX + padX} cy={n.y} r={5} fill={SB_GREEN} />
+            <text x={tagX + padX + 16} y={n.y + fontSize * 0.36} fill={FG_LIGHT} fontFamily="'Source Code Pro', monospace" fontSize={fontSize} fontWeight={500}>
+              {label}
+            </text>
+          </g>
+        );
+      })}
+      <rect width={W} height={H} fill={`url(#${id}-vign)`} />
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="br" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP4b — Expanse (hero). Small mark on horizon; lockup opt-in corner.
+// ──────────────────────────────────────────────────────────────
+function WP4b_Expanse(props) {
+  const { id = 'wp4b', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const cx = W / 2;
+  const horizonY = H * 0.5;
+  const markScale = Math.min(W, H * 2.2) / 1800;
+  const markW = 109 * markScale, markH = 113 * markScale;
+  const mx = cx - markW / 2;
+  const my = horizonY - markH / 2;
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} />
+          <stop offset="45%" stopColor="#0b120f" />
+          <stop offset="100%" stopColor="#0a140f" />
+        </linearGradient>
+        <radialGradient id={`${id}-sun`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.32 * glow} />
+          <stop offset="40%" stopColor={SB_GREEN} stopOpacity={0.08 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={`${id}-groundFade`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} stopOpacity={0} />
+          <stop offset="85%" stopColor={BG_DEEP} stopOpacity={0.6} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={0.95} />
+        </linearGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-sky)`} />
+      {/* Single soft glow, wider than tall, centered on the mark */}
+      <ellipse cx={cx} cy={horizonY} rx={W * 0.5} ry={H * 0.32} fill={`url(#${id}-sun)`} />
+      <line x1={0} y1={horizonY} x2={W} y2={horizonY} stroke={SB_GREEN} strokeOpacity={0.3 * glow} strokeWidth={1.5} />
+      <g stroke={SB_GREEN} strokeLinecap="round">
+        {Array.from({ length: 22 }).map((_, i) => {
+          const t = Math.pow((i + 1) / 22, 1.6);
+          const y = horizonY + t * (H - horizonY);
+          const op = 0.04 * glow + t * 0.22 * glow;
+          return <line key={`h-${i}`} x1={0} y1={y} x2={W} y2={y} strokeOpacity={op} strokeWidth={1} />;
+        })}
+        {Array.from({ length: 56 }).map((_, i) => {
+          const t = (i - 27.5) / 28;
+          const xBot = cx + t * (W * 1.1);
+          return <line key={`v-${i}`} x1={cx} y1={horizonY} x2={xBot} y2={H} strokeOpacity={0.06 * glow + (1 - Math.abs(t)) * 0.14 * glow} strokeWidth={1} />;
+        })}
+      </g>
+      <rect x={0} y={horizonY} width={W} height={H - horizonY} fill={`url(#${id}-groundFade)`} />
+      <g transform={`translate(${mx} ${my}) scale(${markScale})`}>
+        <use href="#sb-mark" />
+      </g>
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="br" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP6_Seed — lockup to bottom-left corner; canopy fans wider on wide aspects.
+// ──────────────────────────────────────────────────────────────
+function WP6_Seed(props) {
+  const { id = 'wp6s', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const rand = mulberry32(5);
+  const cx = W / 2;
+  // Raise seed so canopy sits above dock safe zone (bottom ~18%)
+  const cy = H * 0.78;
+  const markScale = Math.min(W, H * 2) / 820;
+  const markW = 109 * markScale, markH = 113 * markScale;
+
+  // Aspect-aware fan: wider horizontal spread on wider canvases.
+  const aspectRatio = W / H;
+  // Angular fan spread — wider on wider canvases, but always at least ~PI (180°)
+  const fanSpread = Math.min(Math.PI * 1.7, Math.PI * 1.15 + aspectRatio * 0.12);
+  // Length driven by width (so wider canvases = longer branches).
+  const baseLen = W * 0.048;
+  // Canopy should ALWAYS be wider than tall. Squish more aggressively so
+  // visual width (spread × baseLen) > visual height (baseLen × ySquish × depth).
+  const ySquish = aspectRatio >= 2.4 ? 0.34 : aspectRatio >= 1.9 ? 0.46 : 0.58;
+
+  const branches = [];
+  function grow(x, y, angle, length, depth, width) {
+    if (depth <= 0 || length < 40) return;
+    const nx = x + Math.cos(angle) * length;
+    const ny = y + Math.sin(angle) * length;
+    branches.push({ x1: x, y1: y, x2: nx, y2: ny, depth, width });
+    const splits = rand() < 0.3 ? 3 : 2;
+    for (let i = 0; i < splits; i++) {
+      const spread = 0.35 + rand() * 0.3;
+      const childAngle = angle + (i - (splits - 1) / 2) * spread + (rand() - 0.5) * 0.15;
+      const childLen = length * (0.62 + rand() * 0.18);
+      grow(nx, ny, childAngle, childLen, depth - 1, width * 0.8);
+    }
+  }
+  const fanCount = Math.round(9 + (aspectRatio - 1.78) * 2); // more branches on wider screens
+  for (let i = 0; i < fanCount; i++) {
+    const t = i / (fanCount - 1);
+    const angle = -Math.PI / 2 + (t - 0.5) * fanSpread;
+    const len = baseLen + rand() * baseLen * 0.3;
+    grow(cx, cy - markH * 0.1, angle, len, 6, 2.6);
+  }
+
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <radialGradient id={`${id}-soil`} cx="50%" cy="78%" r="42%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.6 * glow} />
+          <stop offset="40%" stopColor={SB_GREEN} stopOpacity={0.12 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} />
+          <stop offset="80%" stopColor={BG} />
+          <stop offset="100%" stopColor="#0c1611" />
+        </linearGradient>
+        <linearGradient id={`${id}-topFade`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} stopOpacity={1} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-sky)`} />
+      <rect width={W} height={H} fill={`url(#${id}-soil)`} />
+      <g transform={`translate(${cx} ${cy - markH * 0.1}) scale(1 ${ySquish}) translate(${-cx} ${-(cy - markH * 0.1)})`}>
+      <g strokeLinecap="round" fill="none">
+        {branches.map((b, i) => {
+          const fadeByDepth = b.depth / 6;
+          const op = 0.15 * glow + fadeByDepth * 0.55 * glow;
+          return <line key={i} x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={SB_GREEN} strokeOpacity={op} strokeWidth={b.width} />;
+        })}
+      </g>
+      <g>
+        {branches.filter(b => b.depth <= 1).map((b, i) => (
+          <circle key={i} cx={b.x2} cy={b.y2} r={2.8} fill={SB_GREEN} opacity={0.9 * glow} />
+        ))}
+      </g>
+      </g>
+      <rect width={W} height={H * 0.148} fill={`url(#${id}-topFade)`} />
+      <g transform={`translate(${cx - markW / 2} ${cy - markH / 2}) scale(${markScale})`}>
+        <use href="#sb-mark" />
+      </g>
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="bl" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP7_Column — "strata" version: layered horizontal bands hint at stack.
+// No text labels. Lockup vertically offset below mark on the column axis.
+// ──────────────────────────────────────────────────────────────
+function WP7_Column(props) {
+  const { id = 'wp7c', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const cx = W / 2;
+  const markScale = Math.min(W, H * 2) / 700;
+  const markW = 109 * markScale, markH = 113 * markScale;
+  const colW = markW * 1.4;
+  // 5 strata of varying heights and densities.
+  const strata = [
+    { yStart: 0.05, yEnd: 0.22, density: 3,   opacity: 0.35 },
+    { yStart: 0.22, yEnd: 0.38, density: 6,   opacity: 0.55 },
+    { yStart: 0.38, yEnd: 0.56, density: 10,  opacity: 0.75 },
+    { yStart: 0.56, yEnd: 0.76, density: 14,  opacity: 0.95 },
+    { yStart: 0.76, yEnd: 0.95, density: 20,  opacity: 0.65 },
+  ];
+  const rand = mulberry32(13);
+
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <linearGradient id={`${id}-colEnds`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0} />
+          <stop offset="15%" stopColor={SB_GREEN} stopOpacity={1} />
+          <stop offset="85%" stopColor={SB_GREEN} stopOpacity={1} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </linearGradient>
+        <linearGradient id={`${id}-colSide`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0} />
+          <stop offset="50%" stopColor={SB_GREEN} stopOpacity={0.12 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </linearGradient>
+        <linearGradient id={`${id}-colSide`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0} />
+          <stop offset="50%" stopColor={SB_GREEN} stopOpacity={0.3 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </linearGradient>
+        <radialGradient id={`${id}-halo`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.6 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+        <filter id={`${id}-markglow`} filterUnits="userSpaceOnUse"
+          x={cx - markW * 2} y={H / 2 - markH * 2} width={markW * 4} height={markH * 4}>
+          <feGaussianBlur stdDeviation={markW * 0.22} />
+        </filter>
+        <filter id={`${id}-markglow2`} filterUnits="userSpaceOnUse"
+          x={cx - markW * 1.2} y={H / 2 - markH * 1.2} width={markW * 2.4} height={markH * 2.4}>
+          <feGaussianBlur stdDeviation={markW * 0.06} />
+        </filter>
+        {/* Giant mark-shaped halo behind everything — replaces the old ellipse. */}
+        <filter id={`${id}-markglowHuge`} filterUnits="userSpaceOnUse"
+          x={cx - markW * 5} y={H / 2 - markH * 5} width={markW * 10} height={markH * 10}>
+          <feGaussianBlur stdDeviation={markW * 0.9} />
+        </filter>
+        {/* Top/bottom fade only (no horizontal vignette) */}
+        <mask id={`${id}-colmask`}>
+          <rect x={0} y={0} width={W} height={H} fill={`url(#${id}-colEnds)`} />
+        </mask>
+        {/* Horizontal fade applied per-band — 0 at column's L edge, full at center, 0 at R edge */}
+        <linearGradient id={`${id}-bandFade`} gradientUnits="userSpaceOnUse"
+          x1={cx - colW / 2} y1="0" x2={cx + colW / 2} y2="0">
+          <stop offset="0%"  stopColor={SB_GREEN} stopOpacity={0} />
+          <stop offset="25%" stopColor={SB_GREEN} stopOpacity={0.6} />
+          <stop offset="50%" stopColor={SB_GREEN} stopOpacity={1} />
+          <stop offset="75%" stopColor={SB_GREEN} stopOpacity={0.6} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </linearGradient>
+        {/* Vertical glow behind the column — subtle radial */}
+        <radialGradient id={`${id}-verticalGlow`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.1 * glow} />
+          <stop offset="60%" stopColor={SB_GREEN} stopOpacity={0.02 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect width={W} height={H} fill={BG_DEEP} />
+      {/* Giant mark-shaped halo behind the column (replaces the old ellipse). */}
+      <g transform={`translate(${cx - markW * 2.5 / 2} ${H / 2 - markH * 2.5 / 2}) scale(${markScale * 2.5})`} filter={`url(#${id}-markglowHuge)`} opacity={0.35 * glow}>
+        <use href="#sb-mark" />
+      </g>
+      {/* Strata bands: wider than column, horizontally faded per-line; masked top/bottom only. */}
+      <g mask={`url(#${id}-colmask)`}>
+        {strata.map((s, si) => {
+          const y0 = s.yStart * H, y1 = s.yEnd * H;
+          const bandCount = s.density;
+          const lines = [];
+          const bandX = cx - colW / 2;
+          const bandW = colW;
+          for (let i = 0; i < bandCount; i++) {
+            const y = y0 + ((y1 - y0) * (i + 0.5)) / bandCount + (rand() - 0.5) * ((y1 - y0) / bandCount) * 0.3;
+            const thick = Math.max(1, (y1 - y0) / bandCount * (0.15 + rand() * 0.25));
+            lines.push(
+              <rect key={`${si}-${i}`} x={bandX} y={y - thick / 2} width={bandW} height={thick}
+                fill={`url(#${id}-bandFade)`} opacity={Math.min(1, s.opacity * (0.55 + rand() * 0.45) * glow)} />
+            );
+          }
+          // Stratum divider
+          lines.push(
+            <rect key={`${si}-div`} x={bandX} y={y1} width={bandW} height={1.5} fill={`url(#${id}-bandFade)`} opacity={0.18 * glow} />
+          );
+          return <g key={si}>{lines}</g>;
+        })}
+      </g>
+      {/* Mark-shaped glow + mark */}
+      <g transform={`translate(${cx - markW / 2} ${H / 2 - markH / 2}) scale(${markScale})`} filter={`url(#${id}-markglow)`} opacity={0.85 * glow}>
+        <use href="#sb-mark" />
+      </g>
+      <g transform={`translate(${cx - markW / 2} ${H / 2 - markH / 2}) scale(${markScale})`} filter={`url(#${id}-markglow2)`} opacity={0.7 * glow}>
+        <use href="#sb-mark" />
+      </g>
+      <g transform={`translate(${cx - markW / 2} ${H / 2 - markH / 2}) scale(${markScale})`}>
+        <use href="#sb-mark" />
+      </g>
+      {/* Lockup in bottom-right (matches other wallpapers). */}
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="br" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP_Pulse — soft radial pulse from the mark (always-on heartbeat).
+// Hero: mark at center, concentric rings radiating outward.
+// ──────────────────────────────────────────────────────────────
+function WP_Pulse(props) {
+  const { id = 'wppu', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const cx = W / 2, cy = H / 2;
+  const markScale = Math.min(W, H * 2) / 780;
+  const markW = 109 * markScale, markH = 113 * markScale;
+
+  // Rings carry the heartbeat metaphor: near rings are tight+bright,
+  // distant ones are faint and far-spaced. Slight elliptical stretch
+  // on wide aspects so the pulse reaches the side edges.
+  const aspectRatio = W / H;
+  const rings = [];
+  const rBase = Math.min(W, H) * 0.07;
+  const count = 32;
+  for (let i = 0; i < count; i++) {
+    const t = i / (count - 1);
+    const r = rBase * (1 + Math.pow(t, 1.2) * 18);
+    const op = Math.max(0.02, 0.38 * (1 - t) * (1 - t)) * glow;
+    const sw = 1 + (1 - t) * 2;
+    rings.push({ r, op, sw });
+  }
+
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <radialGradient id={`${id}-core`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.55 * glow} />
+          <stop offset="40%" stopColor={SB_GREEN} stopOpacity={0.15 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+        <radialGradient id={`${id}-bg`} cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stopColor="#0e1a14" stopOpacity={0.95} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={1} />
+        </radialGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      <ellipse cx={cx} cy={cy} rx={W * 0.22} ry={H * 0.44} fill={`url(#${id}-core)`} />
+      <g fill="none" transform={`translate(${cx} ${cy})`}>
+        {rings.map((r, i) => (
+          <ellipse key={i} cx={0} cy={0} rx={r.r * Math.max(1, aspectRatio / 1.78)} ry={r.r} stroke={SB_GREEN} strokeOpacity={r.op} strokeWidth={r.sw} />
+        ))}
+      </g>
+      <g transform={`translate(${cx - markW / 2} ${cy - markH / 2}) scale(${markScale})`}>
+        <use href="#sb-mark" />
+      </g>
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="br" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP_Terminal — mark glowing above a single monospace prompt line.
+// Hero; developer-product honesty. Speaks to the "speed" half of the brief.
+// ──────────────────────────────────────────────────────────────
+function WP_Terminal(props) {
+  const { id = 'wpte', glow = 1, showWordmark = false } = props;
+  const { W, H } = dims(props);
+  const cx = W / 2, cy = H * 0.44;
+  const markScale = Math.min(W, H * 2) / 760;
+  const markW = 109 * markScale, markH = 113 * markScale;
+  const promptY = cy + markH * 0.95;
+  const fontSize = Math.max(20, H * 0.019);
+  const blockW = fontSize * 0.55;
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <radialGradient id={`${id}-sun`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={SB_GREEN} stopOpacity={0.45 * glow} />
+          <stop offset="30%" stopColor={SB_GREEN} stopOpacity={0.14 * glow} />
+          <stop offset="100%" stopColor={SB_GREEN} stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} />
+          <stop offset="100%" stopColor="#0a130e" />
+        </linearGradient>
+        <filter id={`${id}-markglow`} filterUnits="userSpaceOnUse"
+          x={cx - markW * 2} y={cy - markH * 2} width={markW * 4} height={markH * 4}>
+          <feGaussianBlur stdDeviation={markW * 0.22} />
+        </filter>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      <ellipse cx={cx} cy={cy} rx={Math.min(W * 0.4, H * 0.55)} ry={Math.min(W * 0.2, H * 0.35)} fill={`url(#${id}-sun)`} />
+      <g transform={`translate(${cx - markW / 2} ${cy - markH / 2}) scale(${markScale})`} filter={`url(#${id}-markglow)`} opacity={0.85 * glow}>
+        <use href="#sb-mark" />
+      </g>
+      <g transform={`translate(${cx - markW / 2} ${cy - markH / 2}) scale(${markScale})`}>
+        <use href="#sb-mark" />
+      </g>
+      {/* Prompt line, centered */}
+      <g fontFamily="'Source Code Pro', monospace" fontSize={fontSize} letterSpacing={0.8}>
+        {/* Build the prompt manually so the $ sits in green and the cursor block aligns after the last char */}
+        {(() => {
+          const prefix = '$ ';
+          const cmd = 'npx create-supabase-app';
+          // Approximate character width in monospace
+          const charW = fontSize * 0.6;
+          const totalW = (prefix.length + cmd.length) * charW + blockW * 1.1;
+          const startX = cx - totalW / 2;
+          return (
+            <>
+              <text x={startX} y={promptY} fill={SB_GREEN} opacity={0.9 * glow}>{prefix}</text>
+              <text x={startX + prefix.length * charW} y={promptY} fill={FG} opacity={0.88}>{cmd}</text>
+              <rect x={startX + (prefix.length + cmd.length) * charW + charW * 0.15} y={promptY - fontSize * 0.85} width={blockW} height={fontSize * 0.95} fill={SB_GREEN} opacity={0.75 * glow} />
+            </>
+          );
+        })()}
+      </g>
+      {showWordmark && <SbCornerLockup W={W} H={H} corner="br" />}
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// WP_Spectrum — palette strip of Supabase product shades across the canvas.
+// Atmospheric; "whole platform, many tools." Mark optional at center.
+// ──────────────────────────────────────────────────────────────
+function WP_Spectrum(props) {
+  const { id = 'wpsp', glow = 1, showWordmark = true } = props;
+  const { W, H } = dims(props);
+  const cx = W / 2;
+  // 12 product shades spanning Supabase's green palette (dark → bright → dark).
+  // Each "cell" sits on a central horizontal band; rest of canvas stays black.
+  const shades = [
+    '#1a2620', '#1e3028', '#224033', '#2a5540', '#336e4e', '#3FCF8E',
+    '#2eb377', '#289b66', '#237d53', '#1d5d3f', '#18402c', '#122c1f',
+  ];
+  const cellCount = shades.length;
+  const bandH = H * 0.28;
+  const bandY = (H - bandH) / 2;
+  const totalW = W * 0.72;
+  const cellW = totalW / cellCount;
+  const cellGap = cellW * 0.04;
+  const startX = cx - totalW / 2;
+  const markScale = Math.min(W, H * 2) / 2400;
+  const markW = 109 * markScale, markH = 113 * markScale;
+  return (
+    <svg id={id} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ display: 'block', width: '100%', height: '100%' }}>
+      <SbDefs />
+      <defs>
+        <linearGradient id={`${id}-cellFade`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={BG_DEEP} stopOpacity={0.85} />
+          <stop offset="30%" stopColor={BG_DEEP} stopOpacity={0} />
+          <stop offset="70%" stopColor={BG_DEEP} stopOpacity={0} />
+          <stop offset="100%" stopColor={BG_DEEP} stopOpacity={0.85} />
+        </linearGradient>
+        <filter id={`${id}-soft`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation={cellW * 0.04} />
+        </filter>
+      </defs>
+      <rect width={W} height={H} fill={BG_DEEP} />
+      {/* Palette strip */}
+      <g filter={`url(#${id}-soft)`}>
+        {shades.map((c, i) => (
+          <rect key={i}
+            x={startX + i * cellW + cellGap / 2}
+            y={bandY}
+            width={cellW - cellGap}
+            height={bandH}
+            fill={c}
+            opacity={glow} />
+        ))}
+      </g>
+      {/* Vertical fade on the band so it ghosts out top/bottom */}
+      <rect x={startX - cellGap} y={bandY} width={totalW + cellGap * 2} height={bandH} fill={`url(#${id}-cellFade)`} />
+      {/* Spectrum always shows the mark — the palette strip alone doesn't read as Supabase.
+          The showWordmark toggle controls whether the "supabase" lettering appears alongside it. */}
+      <SbCornerLockup W={W} H={H} corner="br" showWordmark={showWordmark} />
+    </svg>
+  );
+}
+
+Object.assign(window, {
+  WP2b_Ignition, WP3b_Graph, WP4b_Expanse,
+  WP6_Seed, WP7_Column,
+  WP_Pulse, WP_Terminal, WP_Spectrum,
+});
+</script>
+
+  <script type="text/babel">
+    const DEFAULTS = /*EDITMODE-BEGIN*/{
+      "glow": 1.05,
+      "showWordmark": false,
+      "aspect": "ultra",
+      "preset": "uw-2160",
+      "orientation": "portrait",
+      "prefix": "Supabase-"
+    }/*EDITMODE-END*/;
+
+    // Device presets. Every entry belongs to one shape group. The device dropdown
+    // filters to the currently-selected shape, and "shape + device" is the only
+    // way to pick output size.
+    const DEVICE_PRESETS = [
+      // Single — resolution tiers first, then specific Apple machines
+      { key: 'single-1080',  group: 'single', label: '1080p FHD',           w: 1920,  h: 1080, aspect: 'single' },
+      { key: 'single-1440',  group: 'single', label: '1440p QHD',           w: 2560,  h: 1440, aspect: 'single' },
+      { key: 'single-4k',    group: 'single', label: '4K UHD',              w: 3840,  h: 2160, aspect: 'single' },
+      { key: 'single-5k',    group: 'single', label: '5K',                  w: 5120,  h: 2880, aspect: 'single' },
+      { key: 'single-8k',    group: 'single', label: '8K UHD',              w: 7680,  h: 4320, aspect: 'single' },
+      { key: 'mba-13',       group: 'single', label: 'MacBook Air 13″',     w: 2560,  h: 1664, aspect: 'single' },
+      { key: 'mbp-14',       group: 'single', label: 'MacBook Pro 14″',     w: 3024,  h: 1964, aspect: 'single' },
+      { key: 'mbp-16',       group: 'single', label: 'MacBook Pro 16″',     w: 3456,  h: 2234, aspect: 'single' },
+      { key: 'studio',       group: 'single', label: 'Studio Display 5K',   w: 5120,  h: 2880, aspect: 'single' },
+      { key: 'xdr',          group: 'single', label: 'Pro Display XDR 6K',  w: 6016,  h: 3384, aspect: 'single' },
+      { key: 'imac-24',      group: 'single', label: 'iMac 24″ 4.5K',       w: 4480,  h: 2520, aspect: 'single' },
+      // Dual
+      { key: 'dual-qhd',     group: 'dual',   label: 'Dual 2× QHD',         w: 5120,  h: 1440, aspect: 'dual' },
+      { key: 'dual-4k',      group: 'dual',   label: 'Dual 2× 4K',          w: 7680,  h: 2160, aspect: 'dual' },
+      { key: 'dual-8k',      group: 'dual',   label: 'Dual 2× 8K',          w: 15360, h: 4320, aspect: 'dual' },
+      // Ultrawide
+      { key: 'uw-1440',      group: 'ultra',  label: 'Ultrawide 3440×1440', w: 3440,  h: 1440, aspect: 'ultra' },
+      { key: 'uw-2160',      group: 'ultra',  label: 'Ultrawide 5120×2160', w: 5120,  h: 2160, aspect: 'ultra' },
+      { key: 'uw-8k',        group: 'ultra',  label: '8K ultrawide 7680×3291', w: 7680, h: 3291, aspect: 'ultra' },
+      // Mobile
+      { key: 'iphone-17-pro-max', group: 'mobile', label: 'iPhone 17 Pro Max',   w: 1320, h: 2868, aspect: 'mobile' },
+      { key: 'iphone-17-pro',     group: 'mobile', label: 'iPhone 17 Pro',       w: 1206, h: 2622, aspect: 'mobile' },
+      { key: 'iphone-17',         group: 'mobile', label: 'iPhone 17 / Air',     w: 1179, h: 2556, aspect: 'mobile' },
+      { key: 'iphone-16-pro-max', group: 'mobile', label: 'iPhone 16 Pro Max',   w: 1320, h: 2868, aspect: 'mobile' },
+      { key: 'iphone-16-pro',     group: 'mobile', label: 'iPhone 16 Pro',       w: 1206, h: 2622, aspect: 'mobile' },
+      { key: 'iphone-16',         group: 'mobile', label: 'iPhone 16',           w: 1179, h: 2556, aspect: 'mobile' },
+      { key: 'iphone-15',         group: 'mobile', label: 'iPhone 15',           w: 1179, h: 2556, aspect: 'mobile' },
+      { key: 'pixel-9-pro',       group: 'mobile', label: 'Pixel 9 Pro',         w: 1344, h: 2992, aspect: 'mobile' },
+      { key: 'pixel-9',           group: 'mobile', label: 'Pixel 9',             w: 1080, h: 2424, aspect: 'mobile' },
+      { key: 'galaxy-s25-ultra',  group: 'mobile', label: 'Galaxy S25 Ultra',    w: 1440, h: 3120, aspect: 'mobile' },
+      // Tablet — iPads. `orientation` is toggled separately in the UI; `w`/`h` here are the portrait dims.
+      { key: 'ipad-pro-13',       group: 'tablet', label: 'iPad Pro 13″ M4',     w: 2064, h: 2752, aspect: 'tablet' },
+      { key: 'ipad-pro-11',       group: 'tablet', label: 'iPad Pro 11″ M4',     w: 1668, h: 2420, aspect: 'tablet' },
+      { key: 'ipad-air-13',       group: 'tablet', label: 'iPad Air 13″',        w: 2048, h: 2732, aspect: 'tablet' },
+      { key: 'ipad-air-11',       group: 'tablet', label: 'iPad Air 11″',        w: 1640, h: 2360, aspect: 'tablet' },
+      { key: 'ipad-mini',         group: 'tablet', label: 'iPad mini (A17)',     w: 1488, h: 2266, aspect: 'tablet' },
+    ];
+
+    // Default device per shape — used when switching shape.
+    const DEFAULT_PRESET_BY_SHAPE = {
+      single: 'single-4k',
+      dual:   'dual-4k',
+      ultra:  'uw-2160',
+      mobile: 'iphone-17-pro',
+      tablet: 'ipad-pro-13',
+    };
+
+    // Human-readable aspect labels used in filenames
+    const ASPECT_FILE = { single: '16x9', dual: '32x9', ultra: '21x9', mobile: 'mobile', tablet: 'tablet' };
+
+    const VARIATIONS = [
+      { id: 'wp2',  pretty: 'Brand-Field',
+        title: 'Brand Field',
+        desc: 'A simple expression of the brand: a dot grid with the Supabase green rising from the bottom edge like a sunrise. It treats your desktop the same way a clean Postgres schema treats a database — open, empty, waiting for what you’ll build on top of it.',
+        Comp: WP2_GridField, forceWordmark: true },
+      { id: 'wp4',  pretty: 'Horizon',
+        title: 'Horizon',
+        desc: 'A green sun rising on the horizon with a line of SQL above it. Supabase is built on Postgres — every project, at its core, comes down to a query against a database, and that’s what this wallpaper puts on screen.',
+        Comp: WP4_Horizon },
+      { id: 'wp2b', pretty: 'Ignition',
+        title: 'Ignition',
+        desc: 'An iteration on Brand Field: the dots follow a growth curve bending upward into a bright point of ignition at the top-right. About your product taking off — and Supabase being there to help it scale, from the first user to millions.',
+        Comp: WP2b_Ignition, landscapeOnly: true, forceWordmark: true },
+      { id: 'wp3b', pretty: 'Service-Graph',
+        title: 'Service Graph',
+        desc: 'Supabase as a constellation of services forming your product’s backend — Database, Auth, Storage, Realtime, Edge Functions, Vector, Queues — nodes and edges, bigger where Database sits at the center. Every service is a first-class part of the same graph, sharing the same Postgres underneath.',
+        Comp: WP3b_Graph },
+      { id: 'wp4b', pretty: 'Expanse',
+        title: 'Expanse',
+        desc: 'A small Supabase mark on a vanishing-point grid that opens forever. The grid is the platform; the mark is your project on day one. The runway in front of you is everything Supabase can hold as you grow — from your first row to millions.',
+        Comp: WP4b_Expanse },
+      { id: 'wp7c', pretty: 'Column',
+        title: 'Column',
+        desc: 'A luminous column runs through the Supabase mark, layered into strata that hint at the stack beneath it: edge, API, auth, Postgres, storage. The whole platform as a single vertical truth — one system, one database, one source of state.',
+        Comp: WP7_Column },
+      { id: 'wppu', pretty: 'Pulse',
+        title: 'Pulse',
+        desc: 'Concentric rings radiate from the mark like a heartbeat or a realtime channel broadcasting out. About how Supabase keeps your product running: always-on infrastructure, quiet until you need it, reliable when you do.',
+        Comp: WP_Pulse },
+      { id: 'wpte', pretty: 'Terminal',
+        title: 'Terminal',
+        desc: 'A glowing mark above a single monospace prompt. Every Supabase project starts with one command in a terminal — and ships by the end of the weekend.',
+        Comp: WP_Terminal },
+      { id: 'wpsp', pretty: 'Spectrum',
+        title: 'Spectrum',
+        desc: 'A strip of Supabase green shades, dark to bright and back, dissolving into black. Many products, one palette — the whole platform reading as a single continuous thing rather than a collection of parts.',
+        Comp: WP_Spectrum, landscapeOnly: true },
+    ];
+
+    // ── Filename helpers
+    function buildFilename(prefix, pretty, aspect, w, h, ext) {
+      const safePrefix = (prefix || '').trim();
+      return `${safePrefix}${pretty}-${ASPECT_FILE[aspect]}-${w}x${h}.${ext}`;
+    }
+
+    // ── Export helpers
+    function getSvgString(variationId, outW, outH) {
+      const svg = document.getElementById(variationId);
+      if (!svg) return null;
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('width', outW);
+      clone.setAttribute('height', outH);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      return new XMLSerializer().serializeToString(clone);
+    }
+
+    async function svgToPngBlob(svgString, outW, outH, bgColor = '#0a0a0a', sourceRatio = null) {
+      // sourceRatio (optional) = source W/H. When provided and != outW/outH, center-crop.
+      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+        const canvas = document.createElement('canvas');
+        canvas.width = outW; canvas.height = outH;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, outW, outH);
+
+        if (sourceRatio && Math.abs(sourceRatio - outW / outH) > 0.001) {
+          // Center-crop: cover the output area, overflow cropped.
+          const targetRatio = outW / outH;
+          let drawW, drawH;
+          if (sourceRatio > targetRatio) {
+            // source is wider than target → match heights, overflow horizontally
+            drawH = outH;
+            drawW = drawH * sourceRatio;
+          } else {
+            // source is taller than target → match widths, overflow vertically
+            drawW = outW;
+            drawH = drawW / sourceRatio;
+          }
+          const dx = (outW - drawW) / 2;
+          const dy = (outH - drawH) / 2;
+          ctx.drawImage(img, dx, dy, drawW, drawH);
+        } else {
+          ctx.drawImage(img, 0, 0, outW, outH);
+        }
+        return await new Promise(r => canvas.toBlob(r, 'image/png'));
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    function triggerDownload(blob, filename) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+
+    async function downloadPng(variationId, filename, outW, outH, sourceAspect = null) {
+      // Render the SVG at its source aspect's native viewBox, then crop to outW×outH.
+      const src = sourceAspect && ASPECT_BASE[sourceAspect] ? ASPECT_BASE[sourceAspect] : null;
+      const srcW = src ? src.W : outW;
+      const srcH = src ? src.H : outH;
+      const svg = getSvgString(variationId, srcW, srcH);
+      if (!svg) return;
+      const sourceRatio = srcW / srcH;
+      const blob = await svgToPngBlob(svg, outW, outH, '#0a0a0a', sourceRatio);
+      triggerDownload(blob, filename);
+    }
+
+    function downloadSvg(variationId, filename, outW, outH, sourceAspect = null) {
+      // For portrait aspects, wrap the landscape SVG in a cropping container.
+      const src = sourceAspect && ASPECT_BASE[sourceAspect] ? ASPECT_BASE[sourceAspect] : null;
+      if (!src || (outW / outH) === (src.W / src.H)) {
+        // No cropping needed — direct export.
+        const svg = getSvgString(variationId, outW, outH);
+        if (!svg) return;
+        triggerDownload(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }), filename);
+        return;
+      }
+      // Portrait: render source SVG at full 16:9 viewBox, then nest inside a portrait SVG
+      // with centered positioning so sides are cropped.
+      const innerSvg = getSvgString(variationId, src.W, src.H);
+      if (!innerSvg) return;
+      const targetRatio = outW / outH;
+      const sourceRatio = src.W / src.H;
+      let drawW, drawH, dx, dy;
+      if (sourceRatio > targetRatio) {
+        drawH = outH; drawW = drawH * sourceRatio;
+      } else {
+        drawW = outW; drawH = drawW / sourceRatio;
+      }
+      dx = (outW - drawW) / 2;
+      dy = (outH - drawH) / 2;
+      // Strip the outer <svg> wrapper and inline its contents at the offset.
+      // Easiest: embed the inner svg as an <svg> child at the right pos/size.
+      const inner = innerSvg
+        .replace(/^<\?xml[^>]*\?>/, '')
+        .replace(/ xmlns="http:\/\/www\.w3\.org\/2000\/svg"/, '');
+      const wrapped = `<svg xmlns="http://www.w3.org/2000/svg" width="${outW}" height="${outH}" viewBox="0 0 ${outW} ${outH}"><rect width="${outW}" height="${outH}" fill="#0a0a0a"/><g transform="translate(${dx} ${dy})"><svg x="0" y="0" width="${drawW}" height="${drawH}" viewBox="0 0 ${src.W} ${src.H}" preserveAspectRatio="xMidYMid slice">${inner.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')}</svg></g></svg>`;
+      triggerDownload(new Blob([wrapped], { type: 'image/svg+xml;charset=utf-8' }), filename);
+    }
+
+    async function downloadAllZip({ prefix, aspect, sourceAspect, w, h, onProgress }) {
+      if (typeof JSZip === 'undefined') { alert('Zip library failed to load; please refresh.'); return; }
+      const zip = new JSZip();
+      const src = sourceAspect && ASPECT_BASE[sourceAspect] ? ASPECT_BASE[sourceAspect] : ASPECT_BASE[aspect];
+      const srcW = src.W, srcH = src.H;
+      const sourceRatio = srcW / srcH;
+      // Respect landscapeOnly: exclude these whenever the output is a cropped (mobile/tablet) aspect.
+      const isCrop = ['mobile', 'tablet'].includes(aspect);
+      const list = VARIATIONS.filter(v => !(v.landscapeOnly && isCrop));
+
+      // Build the set of orientations to include. Tablet gets BOTH, always —
+      // people typically want a matching pair for portrait + landscape lock screens.
+      const outputs = aspect === 'tablet'
+        ? [
+            { w: Math.min(w, h), h: Math.max(w, h), suffix: '-portrait' },
+            { w: Math.max(w, h), h: Math.min(w, h), suffix: '-landscape' },
+          ]
+        : [{ w, h, suffix: '' }];
+
+      // Count total files for progress
+      const total = list.length * outputs.length;
+      let step = 0;
+
+      for (let i = 0; i < list.length; i++) {
+        const v = list[i];
+        const svgStr = getSvgString(v.id, srcW, srcH);
+        if (!svgStr) { step += outputs.length; continue; }
+
+        for (const out of outputs) {
+          if (onProgress) onProgress(step, total, `${v.title}${out.suffix ? ' · ' + out.suffix.slice(1) : ''}`);
+          step++;
+          const pngBlob = await svgToPngBlob(svgStr, out.w, out.h, '#0a0a0a', sourceRatio);
+          const base = `${(prefix || '').trim()}${v.pretty}-${ASPECT_FILE[aspect]}${out.suffix}-${out.w}x${out.h}`;
+          zip.file(`${base}.png`, pngBlob);
+          // SVG: use crop-wrap if dimensions require it
+          if (sourceAspect && Math.abs(sourceRatio - out.w / out.h) > 0.001) {
+            const targetRatio = out.w / out.h;
+            let drawW, drawH;
+            if (sourceRatio > targetRatio) { drawH = out.h; drawW = drawH * sourceRatio; }
+            else { drawW = out.w; drawH = drawW / sourceRatio; }
+            const dx = (out.w - drawW) / 2, dy = (out.h - drawH) / 2;
+            const inner = svgStr.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+            const wrapped = `<svg xmlns="http://www.w3.org/2000/svg" width="${out.w}" height="${out.h}" viewBox="0 0 ${out.w} ${out.h}"><rect width="${out.w}" height="${out.h}" fill="#0a0a0a"/><g transform="translate(${dx} ${dy})"><svg x="0" y="0" width="${drawW}" height="${drawH}" viewBox="0 0 ${srcW} ${srcH}" preserveAspectRatio="xMidYMid slice">${inner}</svg></g></svg>`;
+            zip.file(`${base}.svg`, wrapped);
+          } else {
+            zip.file(`${base}.svg`, svgStr);
+          }
+        }
+      }
+      if (onProgress) onProgress(total, total, 'Packaging…');
+      const blob = await zip.generateAsync({ type: 'blob' });
+      // Zip filename: for tablet, don't include dimensions (there are two sets).
+      const zipName = aspect === 'tablet'
+        ? `${(prefix || '').trim()}wallpapers-${ASPECT_FILE[aspect]}.zip`
+        : `${(prefix || '').trim()}wallpapers-${ASPECT_FILE[aspect]}-${w}x${h}.zip`;
+      triggerDownload(blob, zipName);
+    }
+
+    // ── UI: right-side Customize rail
+    function CustomizeRail({
+      aspect, preset, orientation, prefix, glow, showWordmark, wordmarkDisabled,
+      onChange, onDownloadAll, bundling, bundleStatus,
+    }) {
+      const base = ASPECT_BASE[aspect];
+      const needsCrop = !!base.sourceAspect;
+      const showOrientationToggle = aspect === 'tablet';
+      // Devices in the current shape group
+      const devices = React.useMemo(
+        () => DEVICE_PRESETS.filter(d => d.group === aspect),
+        [aspect]
+      );
+      const activePreset = DEVICE_PRESETS.find(d => d.key === preset);
+      const baseRes = activePreset || devices[0];
+      const resolvedRes = baseRes
+        ? (showOrientationToggle && orientation === 'landscape'
+            ? { w: baseRes.h, h: baseRes.w }
+            : { w: baseRes.w, h: baseRes.h })
+        : null;
+      const isRowPortrait = resolvedRes && resolvedRes.h >= resolvedRes.w;
+
+      // Switching shape picks a sensible default device for that shape
+      const handleAspectChange = (k) => {
+        const def = DEFAULT_PRESET_BY_SHAPE[k];
+        onChange({ aspect: k, preset: def });
+      };
+
+      return (
+        <aside className="rail">
+          <h2>Customize</h2>
+
+          <div className="rail-section">
+            <div className="rail-label">Shape</div>
+            <div className="seg seg-5">
+              {Object.entries(ASPECT_BASE).map(([k, v]) => (
+                <button key={k} className={aspect === k ? 'active' : ''} onClick={() => handleAspectChange(k)}>
+                  <span>{v.label.replace(' monitor', '')}</span>
+                  <small>{v.ratio === 'portrait' ? 'device' : v.ratio}</small>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="rail-section">
+            <div className="rail-label">Device</div>
+            <select value={preset}
+              onChange={(e) => {
+                const v = e.target.value;
+                const dp = DEVICE_PRESETS.find(d => d.key === v);
+                if (dp) onChange({ preset: v, aspect: dp.aspect });
+              }}>
+              {devices.map(p => (
+                <option key={p.key} value={p.key}>{p.label} — {p.w}×{p.h}</option>
+              ))}
+            </select>
+            {showOrientationToggle && (
+              <div className="seg seg-2" style={{ marginTop: 6 }}>
+                {['portrait', 'landscape'].map(o => (
+                  <button key={o} className={orientation === o ? 'active' : ''}
+                    onClick={() => onChange({ orientation: o })}>
+                    <span>{o[0].toUpperCase() + o.slice(1)}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            {resolvedRes && (
+              <div className="rail-res-display">
+                <span className="dot" />
+                <span>{resolvedRes.w} × {resolvedRes.h}</span>
+                <span style={{ opacity: 0.55, marginLeft: 'auto' }}>
+                  {needsCrop ? (isRowPortrait ? 'portrait' : 'landscape') : base.ratio}
+                </span>
+              </div>
+            )}
+            {needsCrop && (
+              <div className="rail-foot" style={{ marginTop: 4 }}>
+                Cropped from the single-monitor 16:9 composition. Edges are trimmed to fit. Ignition and Spectrum are hidden — their compositions need horizontal space.
+              </div>
+            )}
+          </div>
+
+          <div className="rail-section">
+            <div className="rail-label">Filename prefix</div>
+            <input type="text" value={prefix} placeholder="Supabase-"
+              onChange={(e) => onChange({ prefix: e.target.value })} />
+          </div>
+
+          <div className="rail-section">
+            <div className="rail-label">Branding</div>
+            {!wordmarkDisabled && (
+              <div className="rail-row">
+                <label htmlFor="wm-switch">Show wordmark</label>
+                <button id="wm-switch" type="button"
+                  role="switch" aria-checked={showWordmark}
+                  className={'switch ' + (showWordmark ? 'on' : '')}
+                  onClick={() => onChange({ showWordmark: !showWordmark })} />
+              </div>
+            )}
+            <div className="rail-row">
+              <label>Glow intensity</label>
+              <input type="range" min="0" max="1.6" step="0.05" value={glow}
+                onChange={(e) => onChange({ glow: parseFloat(e.target.value) })} />
+            </div>
+          </div>
+
+          <div className="rail-section">
+            <button className="download-btn bundle-btn" onClick={onDownloadAll} disabled={bundling}>
+              {bundling ? (bundleStatus || 'Bundling…') : 'Download all (ZIP)'}
+            </button>
+            {(() => {
+              const n = VARIATIONS.filter(v => !(v.landscapeOnly && needsCrop)).length;
+              const perFile = resolvedRes ? (resolvedRes.w * resolvedRes.h) : 0; // pixels
+              const outputsPerVar = aspect === 'tablet' ? 2 : 1;
+              const totalMpx = (perFile * n * outputsPerVar) / 1e6;
+              // Rough heuristic: ~0.6 MB/Mpx for a flat-color PNG at 8-bit. SVG is negligible.
+              const estMB = Math.round(totalMpx * 0.6);
+              const heavy = estMB >= 50;
+              const veryHeavy = estMB >= 150;
+              const countText = aspect === 'tablet'
+                ? `Packs all ${n} wallpapers in both orientations (${n * outputsPerVar} files × PNG + SVG).`
+                : `Packs all ${n} wallpapers as PNG + SVG at the current resolution.`;
+              return (
+                <React.Fragment>
+                  <div className="rail-foot">{countText}</div>
+                  {heavy && (
+                    <div className="rail-foot" style={{
+                      marginTop: 6,
+                      color: veryHeavy ? 'hsl(var(--warning-default))' : 'hsl(0 0% 60%)',
+                      borderTop: '1px dashed hsl(0 0% 18%)',
+                      paddingTop: 8,
+                    }}>
+                      {veryHeavy
+                        ? `Heads up — ~${estMB} MB ZIP at this resolution. Packaging can take 30–60s and may briefly hang the tab.`
+                        : `Estimated ZIP size ~${estMB} MB. Packaging may take 15–30s.`}
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })()}
+          </div>
+        </aside>
+      );
+    }
+
+    function App() {
+      const [state, setState] = React.useState(() => {
+        try {
+          const saved = localStorage.getItem('sb-wallpaper-tweaks');
+          if (saved) return { ...DEFAULTS, ...JSON.parse(saved) };
+        } catch(e) {}
+        return DEFAULTS;
+      });
+      const [bundling, setBundling] = React.useState(false);
+      const [bundleStatus, setBundleStatus] = React.useState('');
+      const [busy, setBusy] = React.useState(() => new Set()); // keys of in-flight per-wallpaper downloads
+
+      const isBusy = (key) => busy.has(key);
+      const runGuarded = async (key, fn) => {
+        if (busy.has(key)) return;
+        setBusy((s) => { const n = new Set(s); n.add(key); return n; });
+        try { await fn(); }
+        catch (e) { console.error(e); }
+        finally {
+          setBusy((s) => { const n = new Set(s); n.delete(key); return n; });
+        }
+      };
+
+      React.useEffect(() => {
+        localStorage.setItem('sb-wallpaper-tweaks', JSON.stringify(state));
+      }, [state]);
+
+      // Fade the initial splash once the first frame has committed.
+      React.useEffect(() => {
+        const splash = document.getElementById('splash');
+        if (!splash) return;
+        // Give SVGs one animation frame to paint before fading out.
+        const id = requestAnimationFrame(() => {
+          splash.classList.add('fading');
+          setTimeout(() => splash.remove(), 500);
+        });
+        return () => cancelAnimationFrame(id);
+      }, []);
+
+      const update = (patch) => {
+        setState((t) => {
+          const next = { ...t, ...patch };
+          try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: patch }, '*'); } catch(e){}
+          return next;
+        });
+      };
+
+      const aspect = state.aspect || 'ultra';
+      const preset = state.preset || DEFAULT_PRESET_BY_SHAPE[aspect] || 'single-4k';
+      const orientation = state.orientation || 'portrait';
+      const prefix = state.prefix ?? 'Supabase-';
+      const base = ASPECT_BASE[aspect];
+      // Tablet/mobile always crop from a source aspect.
+      const needsCrop = !!base.sourceAspect;
+      const sourceAspect = base.sourceAspect || aspect;
+      const sourceBase = ASPECT_BASE[sourceAspect];
+      // On cropped aspects the wordmark either gets clipped (landscape tablet)
+      // or never had room to begin with (portrait). Always force it off.
+      const effectiveShowWordmark = needsCrop ? false : state.showWordmark;
+
+      // Resolve current resolution from preset (device is the single source of truth).
+      // Tablet presets store portrait dims; flip when orientation is landscape.
+      const res = React.useMemo(() => {
+        const dp = DEVICE_PRESETS.find(d => d.key === preset);
+        const base = dp || DEVICE_PRESETS.find(d => d.key === DEFAULT_PRESET_BY_SHAPE[aspect]);
+        if (!base) return { w: 3840, h: 2160 };
+        if (aspect === 'tablet' && orientation === 'landscape') {
+          return { w: base.h, h: base.w };
+        }
+        return { w: base.w, h: base.h };
+      }, [preset, aspect, orientation]);
+
+      const handleDownloadAll = async () => {
+        if (bundling) return;
+        setBundling(true);
+        setBundleStatus('Starting…');
+        try {
+          await downloadAllZip({
+            prefix, aspect, sourceAspect, w: res.w, h: res.h,
+            onProgress: (i, total, label) => setBundleStatus(`${i + 1}/${total} · ${label}`),
+          });
+        } catch (e) {
+          console.error(e);
+          alert('Bundle failed: ' + e.message);
+        } finally {
+          setBundling(false);
+          setBundleStatus('');
+        }
+      };
+
+      return (
+        <div className="shell">
+          <div className="main">
+            <section className="hero">
+              <span className="eyebrow"><span className="pulse"></span>wallpapers · unofficial · v1.0</span>
+              <h1>Desktop, phone and tablet wallpapers <span className="accent">in Supabase green</span>.</h1>
+              <p>A set of Supabase-inspired wallpaper designs — scalable to any resolution. Pick a shape and a device on the right — every wallpaper relays out — then download individually as <code>SVG</code> or <code>PNG</code>, or grab the whole set as a ZIP.</p>
+            </section>
+
+            <div className="variations">
+              {VARIATIONS
+                .filter(v => !(v.landscapeOnly && needsCrop))
+                .map(({ id, pretty, title, desc, Comp, forceWordmark }, idx) => {
+                  const wmForThis = forceWordmark ? true : effectiveShowWordmark;
+                  return (
+                <div className="variation" key={id}>
+                  <div className="variation-header">
+                    <div>
+                      <span className="variation-num">№ {String(idx + 1).padStart(2, '0')} · {pretty}</span>
+                      <h2 className="variation-title" style={{ marginTop: 6 }}>{title}</h2>
+                      <p className="variation-desc">{desc}</p>
+                    </div>
+                    <div className="button-row">
+                      <button className="download-btn ghost"
+                        disabled={isBusy(id + ':svg')}
+                        onClick={() => runGuarded(id + ':svg', () => downloadSvg(id, buildFilename(prefix, pretty, aspect, res.w, res.h, 'svg'), res.w, res.h, sourceAspect))}>
+                        {isBusy(id + ':svg') ? '…' : 'SVG'}
+                      </button>
+                      <button className="download-btn"
+                        disabled={isBusy(id + ':png')}
+                        onClick={() => runGuarded(id + ':png', () => downloadPng(id, buildFilename(prefix, pretty, aspect, res.w, res.h, 'png'), res.w, res.h, sourceAspect))}>
+                        {isBusy(id + ':png') ? '…' : 'PNG'}
+                      </button>
+                    </div>
+                  </div>
+                  {needsCrop ? (
+                    (() => {
+                      const isRowPortrait = res.h >= res.w;
+                      const targetRatio = res.w / res.h;
+                      const sourceRatio = sourceBase.W / sourceBase.H;
+                      const widthPct = sourceRatio > targetRatio ? sourceRatio / targetRatio * 100 : 100;
+                      const heightPct = sourceRatio > targetRatio ? 100 : targetRatio / sourceRatio * 100;
+                      return (
+                        <div className="artboard-wrap"
+                          style={{
+                            aspectRatio: `${res.w} / ${res.h}`,
+                            maxWidth: isRowPortrait ? 480 : '100%',
+                            margin: '0 auto', overflow: 'hidden', position: 'relative',
+                          }}>
+                          <div style={{
+                            position: 'absolute',
+                            width: `${widthPct}%`, height: `${heightPct}%`,
+                            left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+                          }}>
+                            <Comp id={id} aspect={sourceAspect} W={sourceBase.W} H={sourceBase.H}
+                              glow={state.glow} showWordmark={wmForThis} showSqlLine={true} />
+                          </div>
+                        </div>
+                      );
+                    })()
+                  ) : (
+                    <div className="artboard-wrap" style={{ aspectRatio: `${base.W} / ${base.H}` }}>
+                      <Comp id={id} aspect={aspect} W={base.W} H={base.H} glow={state.glow} showWordmark={wmForThis} showSqlLine={true} />
+                    </div>
+                  )}
+                  <div className="footer-row">
+                    <span className="footer-meta">{buildFilename(prefix, pretty, aspect, res.w, res.h, 'png')}</span>
+                    <span className="footer-meta" style={{ opacity: 0.7 }}>
+                      {res.w}×{res.h} · {needsCrop ? `${res.h >= res.w ? 'portrait' : 'landscape'} (from ${sourceBase.ratio})` : base.ratio}
+                    </span>
+                  </div>
+                </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          <CustomizeRail
+            aspect={aspect} preset={preset} orientation={orientation}
+            prefix={prefix} glow={state.glow} showWordmark={state.showWordmark} wordmarkDisabled={needsCrop}
+            onChange={update}
+            onDownloadAll={handleDownloadAll}
+            bundling={bundling} bundleStatus={bundleStatus}
+          />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

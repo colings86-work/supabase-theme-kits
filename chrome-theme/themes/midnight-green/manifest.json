@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "version": "1.0.0",
+  "name": "Supabase — Midnight Green",
+  "description": "Deep green-cast near-black with an atmospheric radial glow. Full Supabase signature mood.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "theme": {
+    "images": {
+      "theme_frame": "images/theme_frame.png",
+      "theme_toolbar": "images/theme_toolbar.png",
+      "theme_ntp_background": "images/theme_ntp_background.png"
+    },
+    "colors": {
+      "frame":                       [10, 21, 18],
+      "frame_inactive":              [8, 18, 15],
+      "frame_incognito":             [6, 14, 12],
+      "frame_incognito_inactive":    [4, 12, 10],
+      "toolbar":                     [15, 29, 25],
+      "tab_text":                    [250, 250, 250],
+      "tab_background_text":         [125, 155, 140],
+      "tab_background_text_inactive":[95, 120, 108],
+      "bookmark_text":               [175, 195, 185],
+      "ntp_background":              [10, 21, 18],
+      "ntp_text":                    [250, 250, 250],
+      "ntp_link":                    [62, 207, 142],
+      "button_background":           [15, 29, 25],
+      "omnibox_background":          [12, 24, 20],
+      "omnibox_text":                [250, 250, 250]
+    },
+    "tints": {
+      "buttons":           [-1, -1, 0.85],
+      "frame":             [-1, -1, -1],
+      "background_tab":    [-1, -1, -1]
+    },
+    "properties": {
+      "ntp_background_alignment": "bottom"
+    }
+  }
+}
