@@ -7,7 +7,7 @@ A collection of Supabase-themed customization kits for your desktop tools — in
 ## Usage
 
 ```bash
-git clone https://github.com/colings86/supabase-theme-kits.git
+git clone https://github.com/colings86-work/supabase-theme-kits.git
 cd supabase-theme-kits
 open index.html
 ```
